@@ -21,7 +21,7 @@ class Menu extends Phaser.Scene {
         // add menu screen text
         this.add.text(centerX, centerY, 'Endless Runner', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY + 2*textSpacer, 'Press up to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + 2*textSpacer, 'Press space to start', menuConfig).setOrigin(0.5);
 
 
         // set up cursor keys
@@ -29,7 +29,7 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
             this.scene.start('playScene');
         }
     }

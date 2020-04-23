@@ -26,31 +26,35 @@ let config = {
 let game = new Phaser.Game(config);
 
 // define globals
-var background;
-var ground;
-var player = null;
-
-var maxVelocityX = 400;
-var maxVelocityY = 1000;
-
-var playerRunAccel = 100;
-var groundDrag = 800;
-
-var holdJumpTime = 180;
-var playerJumpSpeed = -35;
-var playerInitSpeed = -300;
-var playerInitAccel = -50;
-
-var playerAirAccel = 15;
-var airDrag = 100;
-
-var isJumping = false;
-var isGrounded = false;
-
 var gameWidth = game.config.width;
 var gameHeight = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
 const textSpacer = 64;
+var isGameOver = false;
+
+// game objects
+var background;
+var ground;
+var platforms;
+var player = null;
+
+// player settings
+var isJumping = false;
+var isGrounded = false;
+
+var maxVelocityX = 400;
+var maxVelocityY = 1000;
+var playerRunAccel = 100;
+var groundDrag = 500;
+
+var holdJumpTime = 180;
+var playerJumpSpeed = -35;
+var playerInitSpeed = -300;
+
+var playerAirAccel = 15;
+var airDrag = 100;
 
 var cursors;
+
+var scrollChange = 0.5;

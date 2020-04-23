@@ -1,7 +1,7 @@
 class Log extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY, velocityX, velocityY, platforms) {
+    constructor(scene, spawnX, spawnY, velocityX, velocityY) {
         // call Phaser Physics Sprite constructor
-        super(scene, spawnX, spawnY, ''); 
+        super(scene, spawnX, spawnY, '').setOrigin(0,0); 
         // set up physics sprite
         scene.add.existing(this);               // add to existing scene, displayList, updateList
         scene.physics.add.existing(this);       // add physics body
