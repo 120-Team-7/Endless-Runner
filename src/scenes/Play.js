@@ -6,7 +6,7 @@ class Play extends Phaser.Scene {
     create() {
         var platforms;
 
-        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, '').setOrigin(0,0);
+        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
         
         let playConfig = {
@@ -49,14 +49,18 @@ class Play extends Phaser.Scene {
         }
 
         if(isGrounded){
+            // Ground movement
             if(cursors.left.isDown) {
                 player.body.velocity.x -= playerRunAccel;
             } else if(cursors.right.isDown) {
                 player.body.velocity.x += playerRunAccel;
             } else {
+                // Set drag when not inputting movement
                 player.body.setDragX(groundDrag);
             }
         } else {
+            // Air movement
+            // Set drag always when in air, decreased control while in air
             player.body.setDragX(airDrag);
             if(cursors.left.isDown) {
                 player.body.velocity.x -= playerAirAccel;

@@ -30,7 +30,7 @@ var background;
 var ground;
 var player = null;
 
-var maxVelocityX = 500;
+var maxVelocityX = 400;
 var maxVelocityY = 1000;
 
 var playerRunAccel = 100;
@@ -41,7 +41,7 @@ var playerJumpSpeed = -35;
 var playerInitSpeed = -300;
 var playerInitAccel = -50;
 
-var playerAirAccel = 25;
+var playerAirAccel = 15;
 var airDrag = 100;
 
 var isJumping = false;
