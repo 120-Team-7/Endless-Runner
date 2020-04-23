@@ -10,9 +10,9 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            //debug: true,
+            debug: true,
             gravity: {
-                y: 500
+                y: 800
             }
         }
     },
@@ -29,8 +29,16 @@ let game = new Phaser.Game(config);
 var background;
 var ground;
 var player = null;
-var playerSpeed = 500;
+var playerRunSpeed = 400;
+var playerJumpSpeed = -35;
+var playerInitSpeed = -300;
+var playerInitAccel = -50;
+var drag = 800;
+
+var gameWidth = game.config.width;
+var gameWidth = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
 const textSpacer = 64;
+
 var cursors;

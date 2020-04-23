@@ -3,15 +3,12 @@ class Play extends Phaser.Scene {
         super('playScene');
     }
 
-
-    
-
     create() {
         var platforms;
-        
-        
 
-
+        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, '').setOrigin(0,0);
+        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+        
         let playConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
@@ -25,35 +22,39 @@ class Play extends Phaser.Scene {
             fixedWidth: 0
         }
 
-
-        
-        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, '').setOrigin(0,0);
-        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
-
-        
         cursors = this.input.keyboard.createCursorKeys();
       
-        
 
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
+        player.setCollideWorldBounds(true);
+        
         platforms = this.physics.add.staticGroup();
         platforms.create(500, 415,'wall' );
         this.physics.add.collider(player, platforms);
-        player.setCollideWorldBounds(true);
-
-        
 
     }
 
     update() {
+        player.isGrounded = player.body.touching.down;
+
         if(cursors.left.isDown) {
-            player.body.velocity.x = -playerSpeed;
+            player.body.velocity.x = -playerRunSpeed;
+        } else if(cursors.right.isDown) {
+            player.body.velocity.x = playerRunSpeed;
+        } else {
+            player.body.setDragX(drag);
         }
-        if(cursors.right.isDown) {
-            player.body.velocity.x = playerSpeed;
+
+        // Min jump speed
+        if(player.isGrounded && cursors.up.isDown){
+            console.log("init");
+            player.body.velocity.y = playerInitSpeed;
+            player.body.setAccelerationY(playerInitAccel);
         }
-        if(cursors.up.isDown) {
-            player.body.velocity.y = -playerSpeed;
+        // Hold jump speed
+        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
+            console.log("hold");
+	        player.body.velocity.y += playerJumpSpeed;
         }
 
         background.tilePositionX += 0.5;

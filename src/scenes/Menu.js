@@ -8,7 +8,7 @@ class Menu extends Phaser.Scene {
         // score display
         let menuConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
+            fontSize: '100px',
             // backgroundColor: '#F3B141',
             color: '#843605',
             align: 'right',
@@ -20,6 +20,9 @@ class Menu extends Phaser.Scene {
         }
         // add menu screen text
         this.add.text(centerX, centerY, 'Endless Runner', menuConfig).setOrigin(0.5);
+        menuConfig.fontSize = '30px';
+        this.add.text(centerX, centerY + 2*textSpacer, 'Press up to start', menuConfig).setOrigin(0.5);
+
 
         // set up cursor keys
         cursors = this.input.keyboard.createCursorKeys();
