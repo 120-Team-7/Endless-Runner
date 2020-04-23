@@ -23,10 +23,10 @@ class Play extends Phaser.Scene {
         }
 
         cursors = this.input.keyboard.createCursorKeys();
-      
 
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
         player.setCollideWorldBounds(true);
+        player.setMaxVelocity(maxVelocityX, maxVelocityY);
         
         platforms = this.physics.add.staticGroup();
         platforms.create(gameWidth/2, 415, 'wall').setOrigin(0.5);
@@ -40,29 +40,45 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        this.text.setText('Event.progress: ' + this.spawner1.timer.getProgress().toString());
-        // this.log1.update();
+         // this.log1.update();
+        this.text.setText("isGrounded " + isGrounded + " isJumping " + isJumping);
 
-        player.isGrounded = player.body.touching.down;
-
-        if(cursors.left.isDown) {
-            player.body.velocity.x = -playerRunSpeed;
-        } else if(cursors.right.isDown) {
-            player.body.velocity.x = playerRunSpeed;
-        } else {
-            player.body.setDragX(drag);
+        isGrounded = player.body.touching.down;
+        if(isGrounded){
+            isJumping = false;
         }
 
+        if(isGrounded){
+            if(cursors.left.isDown) {
+                player.body.velocity.x -= playerRunAccel;
+            } else if(cursors.right.isDown) {
+                player.body.velocity.x += playerRunAccel;
+            } else {
+                player.body.setDragX(groundDrag);
+            }
+        } else {
+            player.body.setDragX(airDrag);
+            if(cursors.left.isDown) {
+                player.body.velocity.x -= playerAirAccel;
+            } else if(cursors.right.isDown) {
+                player.body.velocity.x += playerAirAccel;
+            }
+        }
+        
+
         // Min jump speed
-        if(player.isGrounded && cursors.up.isDown){
+        if(isGrounded && cursors.up.isDown){
             console.log("init");
             player.body.velocity.y = playerInitSpeed;
             player.body.setAccelerationY(playerInitAccel);
+            isJumping = true;
         }
         // Hold jump speed
-        if(player.isGrounded && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
+        if(isJumping == true && Phaser.Input.Keyboard.DownDuration(cursors.up, holdJumpTime)) {
             console.log("hold");
 	        player.body.velocity.y += playerJumpSpeed;
+        } else {
+            isJumping = false;
         }
 
         background.tilePositionX += 0.5;

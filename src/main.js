@@ -29,11 +29,23 @@ let game = new Phaser.Game(config);
 var background;
 var ground;
 var player = null;
-var playerRunSpeed = 400;
+
+var maxVelocityX = 500;
+var maxVelocityY = 1000;
+
+var playerRunAccel = 100;
+var groundDrag = 800;
+
+var holdJumpTime = 180;
 var playerJumpSpeed = -35;
 var playerInitSpeed = -300;
 var playerInitAccel = -50;
-var drag = 800;
+
+var playerAirAccel = 25;
+var airDrag = 100;
+
+var isJumping = false;
+var isGrounded = false;
 
 var gameWidth = game.config.width;
 var gameHeight = game.config.height;
