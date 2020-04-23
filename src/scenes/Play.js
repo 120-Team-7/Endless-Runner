@@ -3,9 +3,14 @@ class Play extends Phaser.Scene {
         super('playScene');
     }
 
+
+    
+
     create() {
-        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, '').setOrigin(0,0);
-        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+        var platforms;
+        
+        
+
 
         let playConfig = {
             fontFamily: 'Courier',
@@ -19,18 +24,25 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-        cursors = this.input.keyboard.createCursorKeys();
 
-        player = this.physics.add.sprite(centerX, centerY, 'player').setOrigin(0.5);
 
-        this.physics.add.existing(player);
-        this.physics.add.existing(ground, true);
         
-        player.setImmovable();
-        player.setMaxVelocity(400, 10000);
+        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, '').setOrigin(0,0);
+        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+
+        
+        cursors = this.input.keyboard.createCursorKeys();
+      
+        
+
+        player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
+        platforms = this.physics.add.staticGroup();
+        platforms.create(500, 415,'wall' );
+        this.physics.add.collider(player, platforms);
         player.setCollideWorldBounds(true);
 
-        this.physics.add.collider(ground, player);
+        
+
     }
 
     update() {
