@@ -11,10 +11,8 @@ class Log extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        // override physics sprite update()
-        // super.update();
         if(this.x < 0) {
-            this.x = gameWidth + 20;
+            this.destroy();
         }
     }
 }

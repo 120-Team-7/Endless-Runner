@@ -32,14 +32,16 @@ class Play extends Phaser.Scene {
         platforms.create(gameWidth/2, 415, 'wall').setOrigin(0.5);
         this.physics.add.collider(player, platforms);
 
-        this.log1 = new Log(this, gameWidth, centerY, -300, 500, platforms);
+        // this.log1 = new Log(this, gameWidth, centerY, -300, 500, platforms);
+        this.spawner1 = new ObstacleSpawner(this, 100, platforms);
+        // this.physics.add.collider(this.log1, platforms);
 
-        this.physics.add.collider(this.log1, platforms);
-
+        this.text = this.add.text(32, 32);
     }
 
     update() {
-        this.log1.update();
+        this.text.setText('Event.progress: ' + this.spawner1.timer.getProgress().toString());
+        // this.log1.update();
 
         player.isGrounded = player.body.touching.down;
 
@@ -58,7 +60,7 @@ class Play extends Phaser.Scene {
             player.body.setAccelerationY(playerInitAccel);
         }
         // Hold jump speed
-        if(Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
+        if(player.isGrounded && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
             console.log("hold");
 	        player.body.velocity.y += playerJumpSpeed;
         }
