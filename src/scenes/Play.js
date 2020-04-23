@@ -32,16 +32,29 @@ class Play extends Phaser.Scene {
         platforms.create(gameWidth/2, 415, 'wall').setOrigin(0.5);
         this.physics.add.collider(player, platforms);
 
-        // this.log1 = new Log(this, gameWidth, centerY, -300, 500, platforms);
-        this.spawner1 = new ObstacleSpawner(this, 100, platforms);
-        // this.physics.add.collider(this.log1, platforms);
+        // ObstacleSpawner(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) 
+        this.spawner1 = new ObstacleSpawner(this, platforms, 2000, 3000, -300, -200, -600, 600);
+        
+        // this.timer = this.time.addEvent({
+        //     delay: Phaser.Math.Between(2000, 3000), 
+        //     callback: () => {
+        //         console.log("spawning");
+                
+        //         this.log = new Log(this, gameWidth, centerY, Phaser.Math.Between(-300, -200), Phaser.Math.Between(600, -600), platforms);
+        //         this.physics.add.collider(this.log, platforms);
+        //     }, 
+        //     callbackContext: this,
+        //     loop: true,
+        // });
 
-        this.text = this.add.text(32, 32);
+        this.test1 = this.add.text(32, 32);
     }
 
     update() {
          // this.log1.update();
-        this.text.setText("isGrounded " + isGrounded + " isJumping " + isJumping);
+        this.test1.setText("isGrounded " + isGrounded + " isJumping " + isJumping);
+
+        this.spawner1.update();
 
         isGrounded = player.body.touching.down;
         if(isGrounded){
@@ -68,7 +81,6 @@ class Play extends Phaser.Scene {
                 player.body.velocity.x += playerAirAccel;
             }
         }
-        
 
         // Min jump speed
         if(isGrounded && cursors.up.isDown){

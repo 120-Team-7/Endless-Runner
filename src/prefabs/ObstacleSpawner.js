@@ -1,20 +1,24 @@
 class ObstacleSpawner{
-    constructor(scene, rate, platforms) {
+    constructor(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) {
         console.log("spawner made")
-        this.happy = 5;
-    }
+        scene.timer = scene.time.addEvent({
+            delay: Phaser.Math.Between(delayMin, delayMax), 
+            callback: () => {
+                console.log("spawning");
+                
+                scene.log = new Log(scene, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), platforms);
+                scene.physics.add.collider(scene.log, platforms);
+            }, 
+            callbackContext: scene,
+            loop: true,
+        });
 
-    create() {
-        this.timer = scene.time.addEvent(rate, () => {
-            console.log("spawning");
-            this.log = new Log(this, gameWidth, centerY, -300, 500, platforms);
-            this.physics.add.collider(this.log, platforms);
-            },
-            scene, true
-        );
+        this.scene = scene;
+
+        scene.test2 = scene.add.text(32, 64);
     }
 
     update() {
-       
+        this.scene.test2.setText("timer: " + this.scene.timer.getProgress().toString().substr(0, 4))
     }
 }
