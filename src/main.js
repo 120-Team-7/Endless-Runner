@@ -36,7 +36,7 @@ var playerInitAccel = -50;
 var drag = 800;
 
 var gameWidth = game.config.width;
-var gameWidth = game.config.height;
+var gameHeight = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
 const textSpacer = 64;

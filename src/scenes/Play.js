@@ -29,12 +29,18 @@ class Play extends Phaser.Scene {
         player.setCollideWorldBounds(true);
         
         platforms = this.physics.add.staticGroup();
-        platforms.create(500, 415,'wall' );
+        platforms.create(gameWidth/2, 415, 'wall').setOrigin(0.5);
         this.physics.add.collider(player, platforms);
+
+        this.log1 = new Log(this, gameWidth, centerY, -300, 500, platforms);
+
+        this.physics.add.collider(this.log1, platforms);
 
     }
 
     update() {
+        this.log1.update();
+
         player.isGrounded = player.body.touching.down;
 
         if(cursors.left.isDown) {
