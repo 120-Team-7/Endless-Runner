@@ -33,10 +33,22 @@ class GameOver extends Phaser.Scene {
         // // }
         // this.add.text(centerX, centerY, `You avoided getting REKT for ${level}s`, { fontFamily: 'Helvetica', fontSize: '48px', color: '#FFF' }).setOrigin(0.5);
         // this.add.text(centerX, centerY + textSpacer, `This browser's best: ${highScore}s`, { fontFamily: 'Helvetica', fontSize: '32px', color: '#FACADE' }).setOrigin(0.5);
-        this.add.text(centerX, centerY + textSpacer*2, `Press space to restart`, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+
+        // Add text
+        this.add.text(centerX, centerY + textSpacer, 'Press space to restart', { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+
+        if(currTime > highScore){
+            highScore = currTime;
+            this.add.text(centerX, centerY + 2*textSpacer, 'NEW HIGH SCORE: ' + highScore, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+        } else {
+            this.add.text(centerX, centerY + 2*textSpacer, 'High score: ' + highScore, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+        }
+
 
         // set up cursor keys
         cursors = this.input.keyboard.createCursorKeys();
+
+        // update globals
         isGameOver = false;
     }
 

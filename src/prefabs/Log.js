@@ -1,5 +1,5 @@
 class Log extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY, velocityX, velocityY) {
+    constructor(scene, spawnX, spawnY, velocityX, velocityY, logBounce) {
         // call Phaser Physics Sprite constructor
         super(scene, spawnX, spawnY, '').setOrigin(0,0); 
         // set up physics sprite
@@ -7,7 +7,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);       // add physics body
         this.setVelocityX(velocityX);
         this.setVelocityY(velocityY);
-        this.setBounceY(1);
+        this.setBounceY(logBounce);
     }
 
     update() {

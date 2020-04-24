@@ -1,11 +1,11 @@
 class ObstacleSpawner{
-    constructor(scene, delayMin, delayMax, minX, maxX, minY, maxY) {
+    constructor(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce) {
         console.log("spawner made")
         scene.timer = scene.time.addEvent({
             delay: Phaser.Math.Between(delayMin, delayMax), 
             callback: () => {
                 console.log("spawning");
-                scene.log = new Log(scene, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY));
+                scene.log = new Log(scene, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce);
                 // bounce on ground
                 scene.physics.add.collider(scene.log, platforms);
                 // collide with the player
@@ -25,6 +25,7 @@ class ObstacleSpawner{
     }
 
     playerHit(){
+        sceneClock.paused = true;
         player.body.setDragX(groundDrag);
         isGameOver = true;
         console.log('You lose');

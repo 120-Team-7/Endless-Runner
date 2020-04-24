@@ -32,6 +32,9 @@ var centerX = game.config.width/2;
 var centerY = game.config.height/2;
 const textSpacer = 64;
 var isGameOver = false;
+var sceneClock;
+var highScore = 0;
+var currTime;
 
 // game objects
 var background;

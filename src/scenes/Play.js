@@ -3,6 +3,7 @@ class Play extends Phaser.Scene {
         super('playScene');
     }
 
+
     create() {
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
@@ -31,15 +32,22 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(player, platforms);
 
         // ObstacleSpawner(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) 
-        this.spawner1 = new ObstacleSpawner(this, 2000, 3000, -300, -200, -600, 600);
+        this.spawner1 = new ObstacleSpawner(this, 5000, 6000, -300, -200, -600, 600, 1);
 
-        this.test1 = this.add.text(32, 32);
+        this.timeText = this.add.text(32, 32, 'Time: 0');
+        currTime = 0;
+        sceneClock = this.time.addEvent({
+            delay: 1000, 
+            callback: () => {
+                currTime ++;
+                this.timeText.setText('Time: ' + currTime);
+            }, 
+            callbackContext: this,
+            loop: true,
+        });
     }
 
-    update() {
-         // this.log1.update();
-        this.test1.setText("isGrounded " + isGrounded + " isJumping " + isJumping);
-
+    update(time) {
         this.spawner1.update();
 
         isGrounded = player.body.touching.down;

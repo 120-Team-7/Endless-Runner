@@ -19,9 +19,12 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
         // add menu screen text
-        this.add.text(centerX, centerY, 'Endless Runner', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY - textSpacer, 'Endless Runner', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
+        this.add.text(centerX, centerY + textSpacer, 'LEFT ARROW move left RIGHT ARROW move right UP ARROW jump', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 2*textSpacer, 'Press space to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
+
 
 
         // set up cursor keys
