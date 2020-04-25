@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(player, platforms);
 
         // ObstacleSpawner(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) 
-        this.spawner1 = new ObstacleSpawner(this, 5000, 6000, -300, -200, -600, 600, 1);
+        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -300, -200, -600, 600, 1);
 
         this.timeText = this.add.text(32, 32, 'Time: 0');
         currTime = 0;
@@ -91,22 +91,19 @@ class Play extends Phaser.Scene {
 
             // Experimental time slow  
             if(cursors.shift.isDown) {
-                if(this.physics.world.timeScale < 1.25){
+                if(this.physics.world.timeScale < slowedTimeScale){
                     this.physics.world.timeScale += 0.01; 
                 } else {
-                    this.physics.world.timeScale = 1.25;
+                    this.physics.world.timeScale = slowedTimeScale;
                 }
             } else {
-                if(this.physics.world.timeScale > 0.75){
+                if(this.physics.world.timeScale > normTimeScale){
                     this.physics.world.timeScale -= 0.01; 
                 } else {
-                    this.physics.world.timeScale = 0.75;
+                    this.physics.world.timeScale = normTimeScale;
                 }
             }
             this.timeScaleText.setText('TimeScale: ' + this.physics.world.timeScale);
-
-
-
         }
 
         // scroll background and ground

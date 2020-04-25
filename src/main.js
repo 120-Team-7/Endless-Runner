@@ -1,3 +1,5 @@
+var gravityY = 800;
+
 // define and configure main Phaser game object
 let config = {
     parent: 'myGame',
@@ -12,7 +14,7 @@ let config = {
         arcade: {
             debug: true,
             gravity: {
-                y: 800
+                y: gravityY
             }
         }
     },
@@ -30,6 +32,7 @@ var gameWidth = game.config.width;
 var gameHeight = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
+var scrollChange = 0.5;
 const textSpacer = 64;
 var isGameOver = false;
 var sceneClock;
@@ -59,6 +62,11 @@ var playerInitSpeed = -300;
 var playerAirAccel = 15;
 var airDrag = 100;
 
+var normTimeScale = 1;
+var slowedTimeScale = 2;
+
+var minDragSpeed = 300;
+var maxDragSpeed = 500;
+
 var cursors;
 
-var scrollChange = 0.5;
