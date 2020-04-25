@@ -1,5 +1,5 @@
 class Log extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY, velocityX, velocityY, logBounce) {
+    constructor(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce) {
         // call Phaser Physics Sprite constructor
         super(scene, spawnX, spawnY, '').setOrigin(0,0).setInteractive(); 
         // set up physics sprite
@@ -30,7 +30,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             // } else {
             //     this.dragVelocityY = Phaser.Math.Clamp(pointer.y - this.initPointerY, -maxDragSpeed, -minDragSpeed)
             // }
-            
+
             gameObject.body.allowGravity = false;
             
             // gameObject.body.velocity.x = this.dragVelocityX;
@@ -40,20 +40,26 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             gameObject.body.velocity.y = pointer.y - this.initPointerY;
 
             this.gravityReturn = scene.time.delayedCall(500, () => {
-                console.log("Return: " + gameObject.body.gravity.y);
                 gameObject.body.allowGravity = true;
             }, null, scene);
         });
+
+        // Despawn after time to prevent player tossing logs up forever
+        this.despawnTime = scene.time.delayedCall(logDespawnTime, () => {
+            this.group.remove(this, true, true);
+        }, null, scene);
+
+        this.group = group;
     }
 
     update() {
         if(this.x < 0) {
-            console.log("log destroyed");
-            this.destroy();
+            this.group.remove(this, true, true);
         }
-        if(this.x > gameWidth) {
-            console.log("reflected: " + this.velocity.x);
-            this.velocity.x = -this.velocity.x;
+        if(this.x > gameWidth + 50) {
+            this.body.velocity.x = -this.body.velocity.x;
+            this.x = gameWidth;
+            this.y = centerY;
         }
     }
 }

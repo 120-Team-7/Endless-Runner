@@ -53,8 +53,9 @@ class Play extends Phaser.Scene {
         this.timeScaleText = this.add.text(32, 96, 'TimeScale: 0');
     }
 
-    update(time) {
+    update() {
         this.spawner1.update();
+        // this.physics.world.collide(paddle, this.barrierGroup, this.paddleCollision, null, this);
         isGrounded = player.body.touching.down;
 
         if(!isGameOver){
@@ -62,8 +63,10 @@ class Play extends Phaser.Scene {
                 // ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
+                    player.flipX = true;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerRunAccel;
+                    player.flipX = false;
                 } else {
                     // Set drag when not inputting movement
                     player.body.setDragX(groundDrag);
@@ -74,8 +77,10 @@ class Play extends Phaser.Scene {
                 player.body.setDragX(airDrag);
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerAirAccel;
+                    player.flipX = true;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerAirAccel;
+                    player.flipX = false;
                 }
             }
     
@@ -93,7 +98,7 @@ class Play extends Phaser.Scene {
                 isJumping = false;
             }
 
-            // Experimental time slow  
+            // Time slow  
             if(Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
                 if(this.physics.world.timeScale < slowedTimeScale){
                     this.physics.world.timeScale += 0.01; 
@@ -108,6 +113,10 @@ class Play extends Phaser.Scene {
                 }
             }
             this.timeScaleText.setText('TimeScale: ' + this.physics.world.timeScale);
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(keyStart)) {
+            this.scene.start('gameOverScene');
         }
 
         // scroll background and ground

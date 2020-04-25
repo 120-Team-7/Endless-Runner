@@ -26,10 +26,12 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
         // add menu screen text
-        this.add.text(centerX, centerY - textSpacer, 'Endless Runner', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY - 3*textSpacer, 'Psychic Trials', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY + textSpacer, 'A move left D move right W jump', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + 2*textSpacer, 'Press enter to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY - textSpacer, 'A move left   D move right    W jump', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'SHIFT time slow', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'Click and drag obstacles to use pyschic throw', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + 2*textSpacer, 'Press ENTER here to start or return to menu elsewhere', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
     }
 

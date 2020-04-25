@@ -27,7 +27,7 @@ let config = {
 // define game
 let game = new Phaser.Game(config);
 
-// define globals
+// Define global variables
 var gameWidth = game.config.width;
 var gameHeight = game.config.height;
 var centerX = game.config.width/2;
@@ -38,23 +38,27 @@ var isGameOver = false;
 var sceneClock;
 var highScore = 0;
 var currTime;
+var logDespawnTime = 10000;
 
-// game objects
+// Game objects
 var background;
 var ground;
 var platforms;
 var player = null;
 
-// player settings
+// player statuses
 var isJumping = false;
 var isGrounded = false;
 var hasJumped = false;
+var isHit = false;
 
+// Player run movemment
 var maxVelocityX = 400;
 var maxVelocityY = 1000;
 var playerRunAccel = 100;
 var groundDrag = 500;
 
+// Player jump movemment
 var holdJumpTime = 180;
 var playerJumpSpeed = -35;
 var playerInitSpeed = -300;
@@ -62,11 +66,14 @@ var playerInitSpeed = -300;
 var playerAirAccel = 15;
 var airDrag = 100;
 
-var normTimeScale = 1;
-var slowedTimeScale = 2;
-var slowmoTime = 3000;
+// Player slowmo
+var normTimeScale = 0.75;
+var slowedTimeScale = 1.25;
+var slowmoTime = 5000;
 
+// Player pyschic throw
 var minDragSpeed = 300;
 var maxDragSpeed = 500;
 
+// Game controls
 var keyLeft, keyRight, keyJump, keySlowmo, keyStart;
