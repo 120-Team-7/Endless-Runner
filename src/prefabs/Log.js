@@ -30,9 +30,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             // } else {
             //     this.dragVelocityY = Phaser.Math.Clamp(pointer.y - this.initPointerY, -maxDragSpeed, -minDragSpeed)
             // }
-
-            console.log(this.dragVelocityX + " " + this.dragVelocityX)
-
+            
             gameObject.body.allowGravity = false;
             
             // gameObject.body.velocity.x = this.dragVelocityX;
@@ -50,6 +48,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         if(this.x < 0) {
+            console.log("log destroyed");
             this.destroy();
         }
         if(this.x > gameWidth) {

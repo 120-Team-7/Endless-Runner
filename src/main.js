@@ -64,9 +64,9 @@ var airDrag = 100;
 
 var normTimeScale = 1;
 var slowedTimeScale = 2;
+var slowmoTime = 3000;
 
 var minDragSpeed = 300;
 var maxDragSpeed = 500;
 
-var cursors;
-
+var keyLeft, keyRight, keyJump, keySlowmo, keyStart;

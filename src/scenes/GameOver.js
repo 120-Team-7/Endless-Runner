@@ -4,6 +4,12 @@ class GameOver extends Phaser.Scene {
     }
 
     create() {
+        keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyJump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
         // // check for high score in local storage
         // // uncomment console.log statements if you need to debug local storage
         // if(localStorage.getItem('hiscore') != null) {
@@ -35,7 +41,7 @@ class GameOver extends Phaser.Scene {
         // this.add.text(centerX, centerY + textSpacer, `This browser's best: ${highScore}s`, { fontFamily: 'Helvetica', fontSize: '32px', color: '#FACADE' }).setOrigin(0.5);
 
         // Add text
-        this.add.text(centerX, centerY + textSpacer, 'Press space to restart', { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'Press enter to restart', { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
 
         if(currTime > highScore){
             highScore = currTime;
@@ -44,17 +50,13 @@ class GameOver extends Phaser.Scene {
             this.add.text(centerX, centerY + 2*textSpacer, 'High score: ' + highScore, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
         }
 
-
-        // set up cursor keys
-        cursors = this.input.keyboard.createCursorKeys();
-
         // update globals
         isGameOver = false;
     }
 
     update() {
         // wait for space input to restart game
-        if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+        if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.start('playScene');
         }
     }

@@ -4,6 +4,13 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
+        keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyJump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
+
         // menu display
         // score display
         let menuConfig = {
@@ -21,18 +28,13 @@ class Menu extends Phaser.Scene {
         // add menu screen text
         this.add.text(centerX, centerY - textSpacer, 'Endless Runner', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY + textSpacer, 'LEFT ARROW move left RIGHT ARROW move right UP ARROW jump', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + 2*textSpacer, 'Press space to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'A move left D move right W jump', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + 2*textSpacer, 'Press enter to start', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
-
-
-
-        // set up cursor keys
-        cursors = this.input.keyboard.createCursorKeys();
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+        if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.start('playScene');
         }
     }

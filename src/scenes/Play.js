@@ -5,6 +5,12 @@ class Play extends Phaser.Scene {
 
 
     create() {
+        keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyJump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
         
@@ -19,9 +25,7 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-
-        cursors = this.input.keyboard.createCursorKeys();
-
+        
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
         player.setCollideWorldBounds(true);
         player.setMaxVelocity(maxVelocityX, maxVelocityY);
@@ -56,9 +60,9 @@ class Play extends Phaser.Scene {
         if(!isGameOver){
             if(isGrounded){
                 // ground movement
-                if(cursors.left.isDown) {
+                if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
-                } else if(cursors.right.isDown) {
+                } else if(keyRight.isDown) {
                     player.body.velocity.x += playerRunAccel;
                 } else {
                     // Set drag when not inputting movement
@@ -68,29 +72,29 @@ class Play extends Phaser.Scene {
                 // air movement
                 // set drag always when in air, decreased control while in air
                 player.body.setDragX(airDrag);
-                if(cursors.left.isDown) {
+                if(keyLeft.isDown) {
                     player.body.velocity.x -= playerAirAccel;
-                } else if(cursors.right.isDown) {
+                } else if(keyRight.isDown) {
                     player.body.velocity.x += playerAirAccel;
                 }
             }
     
             // Min jump speed
-            if(isJumping == false && isGrounded && cursors.up.isDown){
+            if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
             }
             // Hold jump speed
-            if(isJumping == true && Phaser.Input.Keyboard.DownDuration(cursors.up, holdJumpTime)) {
+            if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {
                 player.body.velocity.y += playerJumpSpeed;
             }
             // Let go of up key to jump again
-            if(cursors.up.isUp){
+            if(Phaser.Input.Keyboard.JustUp(keyJump)){
                 isJumping = false;
             }
 
             // Experimental time slow  
-            if(cursors.shift.isDown) {
+            if(Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
                 if(this.physics.world.timeScale < slowedTimeScale){
                     this.physics.world.timeScale += 0.01; 
                 } else {
