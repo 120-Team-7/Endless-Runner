@@ -45,15 +45,14 @@ class Play extends Phaser.Scene {
             callbackContext: this,
             loop: true,
         });
+
+        this.timeScaleText = this.add.text(32, 96, 'TimeScale: 0');
     }
 
     update(time) {
         this.spawner1.update();
-
         isGrounded = player.body.touching.down;
-        if(isGrounded){
-            isJumping = false;
-        }
+
         if(!isGameOver){
             if(isGrounded){
                 // ground movement
@@ -77,16 +76,37 @@ class Play extends Phaser.Scene {
             }
     
             // Min jump speed
-            if(isGrounded && cursors.up.isDown){
+            if(isJumping == false && isGrounded && cursors.up.isDown){
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
             }
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(cursors.up, holdJumpTime)) {
                 player.body.velocity.y += playerJumpSpeed;
-            } else {
+            }
+            // Let go of up key to jump again
+            if(cursors.up.isUp){
                 isJumping = false;
             }
+
+            // Experimental time slow  
+            if(cursors.shift.isDown) {
+                if(this.physics.world.timeScale < 1.25){
+                    this.physics.world.timeScale += 0.01; 
+                } else {
+                    this.physics.world.timeScale = 1.25;
+                }
+            } else {
+                if(this.physics.world.timeScale > 0.75){
+                    this.physics.world.timeScale -= 0.01; 
+                } else {
+                    this.physics.world.timeScale = 0.75;
+                }
+            }
+            this.timeScaleText.setText('TimeScale: ' + this.physics.world.timeScale);
+
+
+
         }
 
         // scroll background and ground

@@ -45,6 +45,7 @@ var player = null;
 // player settings
 var isJumping = false;
 var isGrounded = false;
+var hasJumped = false;
 
 var maxVelocityX = 400;
 var maxVelocityY = 1000;

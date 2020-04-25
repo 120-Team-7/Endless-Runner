@@ -17,7 +17,6 @@ class ObstacleSpawner{
 
         scene.test2 = scene.add.text(32, 64);
         this.scene = scene;
-
     }
 
     update() {
