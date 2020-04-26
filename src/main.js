@@ -27,17 +27,26 @@ let config = {
 // define game
 let game = new Phaser.Game(config);
 
-// Define global variables
+// Game measurements & text placement
 var gameWidth = game.config.width;
 var gameHeight = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
-var scrollChange = 0.5;
-const textSpacer = 64;
+var textSpacer = 64;
+var playHUDHeight = 100;
+var playHUDY = gameHeight - playHUDHeight/2;
+
+
+// Game globals
 var isGameOver = false;
 var sceneClock;
 var highScore = 0;
-var currTime;
+var currTime;               // Track this round's time
+var backgroundScroll = 2;
+var groundScroll = 5;
+var playHUDBox;
+
+// Obstacle settings
 var logDespawnTime = 10000;
 
 // Game objects
@@ -77,3 +86,5 @@ var maxDragSpeed = 500;
 
 // Game controls
 var keyLeft, keyRight, keyJump, keySlowmo, keyStart;
+
+var graphics

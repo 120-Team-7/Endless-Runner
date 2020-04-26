@@ -11,26 +11,44 @@ class Play extends Phaser.Scene {
         keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
-        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
-        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
-        
         let playConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
-            color: '#843605',
-            align: 'right',
+            fontSize: '40px',
+            color: '#00000',
+            // strokeThickness: 5,
+            // stroke: '#4682B4',
+            align: 'center',
             padding: {
-                top: 5,
-                bottom: 5,
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10,
             },
             fixedWidth: 0
         }
+
+        // graphics = this.add.graphics();
+        // graphics.lineStyle(128, 0x00ff00, 1);
+
+        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
+        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+
+        this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
         
+        this.timeSlowText = this.add.text(centerX - 40, playHUDY, 'Time slow:', playConfig).setOrigin(0.5, 0.5);
+        playConfig.fixedWidth = 100;
+        this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
+ 
+        this.add.line(centerX, centerY, 0, 0, gameWidth, gameHeight, 0x000000);
+
+        // Player
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
         player.setCollideWorldBounds(true);
         player.setMaxVelocity(maxVelocityX, maxVelocityY);
+        this.physics.world.timeScale = normTimeScale;
         
-        // platforms
+        // Platforms
         platforms = this.physics.add.staticGroup();
         platforms.create(gameWidth/2, 415, 'invisibleGround').setOrigin(0.5);
         this.physics.add.collider(player, platforms);
@@ -49,8 +67,6 @@ class Play extends Phaser.Scene {
             callbackContext: this,
             loop: true,
         });
-
-        this.timeScaleText = this.add.text(32, 96, 'TimeScale: 0');
     }
 
     update() {
@@ -63,10 +79,8 @@ class Play extends Phaser.Scene {
                 // ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
-                    player.flipX = true;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerRunAccel;
-                    player.flipX = false;
                 } else {
                     // Set drag when not inputting movement
                     player.body.setDragX(groundDrag);
@@ -77,11 +91,16 @@ class Play extends Phaser.Scene {
                 player.body.setDragX(airDrag);
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerAirAccel;
-                    player.flipX = true;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerAirAccel;
-                    player.flipX = false;
+                    
                 }
+            }
+            if(player.body.velocity.x > 0) {
+                player.flipX = false;
+            }
+            if(player.body.velocity.x < 0) {
+                player.flipX = true;
             }
     
             // Min jump speed
@@ -112,7 +131,10 @@ class Play extends Phaser.Scene {
                     this.physics.world.timeScale = normTimeScale;
                 }
             }
-            this.timeScaleText.setText('TimeScale: ' + this.physics.world.timeScale);
+            this.percentSlow = Math.round(200*(this.physics.world.timeScale-normTimeScale));
+            if (this.percentSlow % 10 == 0){
+                this.timeSlowNum.setText(this.percentSlow);
+            }
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
@@ -120,7 +142,7 @@ class Play extends Phaser.Scene {
         }
 
         // scroll background and ground
-        background.tilePositionX += 1;
-        ground.tilePositionX += 4 + scrollChange * (player.body.velocity.x/maxVelocityX);
+        background.tilePositionX += backgroundScroll - (0.33)*backgroundScroll*(this.percentSlow/100);
+        ground.tilePositionX += groundScroll - (0.33)*groundScroll*(this.percentSlow/100);
     }
 }

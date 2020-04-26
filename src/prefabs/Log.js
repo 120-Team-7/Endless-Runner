@@ -9,8 +9,9 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(velocityY);
         this.setBounceY(logBounce);
     
+
+        // Pyschic throw
         scene.input.setDraggable(this);
-    
         scene.input.on('dragstart', function (pointer, gameObject) {
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
@@ -39,8 +40,10 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             gameObject.body.velocity.x = pointer.x - this.initPointerX;
             gameObject.body.velocity.y = pointer.y - this.initPointerY;
 
+            // graphics.lineBetween(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
             this.gravityReturn = scene.time.delayedCall(500, () => {
                 gameObject.body.allowGravity = true;
+                // this.velocityLine.destroy();
             }, null, scene);
         });
 
@@ -56,10 +59,12 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         if(this.x < 0) {
             this.group.remove(this, true, true);
         }
-        if(this.x > gameWidth + 50) {
+        if(this.x > gameWidth + 100) {
             this.body.velocity.x = -this.body.velocity.x;
             this.x = gameWidth;
-            this.y = centerY;
+            if(this.y > centerY){
+                this.y = centerY
+            }
         }
     }
 }

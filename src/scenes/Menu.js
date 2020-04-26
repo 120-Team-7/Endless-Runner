@@ -10,9 +10,6 @@ class Menu extends Phaser.Scene {
         keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
-
-        // menu display
-        // score display
         let menuConfig = {
             fontFamily: 'Courier',
             fontSize: '100px',
