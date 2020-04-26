@@ -8,47 +8,66 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(velocityX);
         this.setVelocityY(velocityY);
         this.setBounceY(logBounce);
-    
+
+        this.exists = true;
 
         // Pyschic throw
         scene.input.setDraggable(this);
         scene.input.on('dragstart', function (pointer, gameObject) {
+            console.log("gottem");
+            // Slow log on initial click
+            gameObject.body.setDrag(preThrowDrag, preThrowDrag)
+            // Store this pointer position
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
         });
         
         scene.input.on('dragend', function (pointer, gameObject) {
-            this.dragVelocityX;
-            this.dragVelocityY;
-            // if(pointer.x - this.initPointerX > 0){
-            //     this.dragVelocityX = Phaser.Math.Clamp(pointer.x - this.initPointerX, minDragSpeed, maxDragSpeed)
-            // } else {
-            //     this.dragVelocityX = Phaser.Math.Clamp(pointer.x - this.initPointerX, -minDragSpeed, -maxDragSpeed)
-            // }
-
-            // if(pointer.y - this.initPointerY > 0){
-            //     this.dragVelocityY = Phaser.Math.Clamp(pointer.y - this.initPointerY, minDragSpeed, maxDragSpeed)
-            // } else {
-            //     this.dragVelocityY = Phaser.Math.Clamp(pointer.y - this.initPointerY, -maxDragSpeed, -minDragSpeed)
-            // }
-
+            // No grav for now
             gameObject.body.allowGravity = false;
+            // Reset drag
+            gameObject.body.setDrag(0, 0);
+
+            this.xDist = pointer.x - this.initPointerX;
+            this.yDist = pointer.y - this.initPointerY;
+            this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
+
+            // Set velocity magnitude to minDragSpeed if drag distance is shorter than min
+            if(this.totalDist < minThrowSpeed){
+                // Converts the xDist, yDist components into xSpeed, ySpeed components in order to achieve minThrowSpeed (diagonal speed) on combining components
+                // Uses Pythagorean theorum to solve for scaleFactor given a, b, and c where c is minThrowSpeed and a, b are xDist, yDist
+                this.minScaleFactor = Math.sqrt(Math.pow(Math.abs(this.xDist), 2) + Math.pow(Math.abs(this.yDist), 2)) / minThrowSpeed;
+                // Converts distance components into velocity components that total to minThrowSpeed
+                this.throwVelocityX = this.xDist / this.minScaleFactor;       
+                this.throwVelocityY = this.yDist / this.minScaleFactor;
+            // Set velocity magnitude to maxThrowSpeed if drag distance is longer than max
+            } else if (this.totalDist > maxThrowSpeed) {
+                this.maxScaleFactor = Math.sqrt(Math.pow(Math.abs(this.xDist), 2) + Math.pow(Math.abs(this.yDist), 2)) / maxThrowSpeed;
+                this.throwVelocityX = this.xDist / this.maxScaleFactor;       
+                this.throwVelocityY = this.yDist / this.maxScaleFactor;
+            // Set velocity magnitude to drag distance if between minThrowSpeed and maxThrowSpeed
+            } else {
+                this.throwVelocityX = this.xDist;       
+                this.throwVelocityY = this.yDist;
+            }
+
             
-            // gameObject.body.velocity.x = this.dragVelocityX;
-            // gameObject.body.velocity.y = this.dragVelocityY;
+            gameObject.body.velocity.x = this.throwVelocityX;
+            gameObject.body.velocity.y = this.throwVelocityY;
 
-            gameObject.body.velocity.x = pointer.x - this.initPointerX;
-            gameObject.body.velocity.y = pointer.y - this.initPointerY;
-
-            // graphics.lineBetween(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
-            this.gravityReturn = scene.time.delayedCall(500, () => {
-                gameObject.body.allowGravity = true;
-                // this.velocityLine.destroy();
+            // Return gravity after short duration
+            this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {
+                // console.log("in gravity return " + this.exists);
+                // if(this.exists == true){
+                    // console.log("gravity returned " + this.exists);
+                    gameObject.body.allowGravity = true;
+                // }
             }, null, scene);
         });
 
         // Despawn after time to prevent player tossing logs up forever
         this.despawnTime = scene.time.delayedCall(logDespawnTime, () => {
+            this.exists = false;
             this.group.remove(this, true, true);
         }, null, scene);
 
@@ -56,12 +75,21 @@ class Log extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        if(this.x < 0) {
-            this.group.remove(this, true, true);
+        // Enforce pre throw slow down min speed
+        if(Math.abs(this.body.velocity.x) < preThrowMinSpeed || Math.abs(this.body.velocity.y) < preThrowMinSpeed){
+            this.body.setDrag(0, 0);
         }
+        // Remove log from group & scene when off left screen
+        if(this.x < 50) {
+            this.exists = false;
+            this.group.remove(this, true, true);
+            // console.log("despawn " + this.exists);
+        }
+        // Reflectlog back left if log goes off right screen
         if(this.x > gameWidth + 100) {
             this.body.velocity.x = -this.body.velocity.x;
             this.x = gameWidth;
+            // Reset to defualt y if current y wouldn't result in log returning on screen
             if(this.y > centerY){
                 this.y = centerY
             }

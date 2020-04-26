@@ -4,9 +4,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
             runChildUpdate: true,
             maxSize: 5
         }
-        
         super(scene, null, groupConfig);
-        console.log(this.runChildUpdate);
         // bounce on ground
         scene.physics.add.collider(this, platforms);
         // collide with the player
@@ -18,22 +16,23 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
                 if(!this.isFull()){
                     this.add(new Log(scene, this, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
                 }
-                console.log("Num logs: " + this.getLength());
             }, 
             callbackContext: scene,
             loop: true,
         });
 
-        scene.test2 = scene.add.text(32, 64);
         this.scene = scene;
     }
 
     update() {
+        // Somehow needed to update children
         this.preUpdate();
-        this.scene.test2.setText("timer: " + this.scene.timer.getProgress().toString().substr(0, 4))
+        // this.scene.timer.getProgress()
     }
 
     playerHit(){
+        this.cameras.main.flash(1000);
+        this.cameras.main.shake(500, 0.01);
         isGameOver = true;
         sceneClock.paused = true;
         player.body.setDragX(groundDrag);

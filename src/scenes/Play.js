@@ -28,19 +28,13 @@ class Play extends Phaser.Scene {
         }
 
         // graphics = this.add.graphics();
+        // graphics.fillStyle(0xC0C0C0, 1);
         // graphics.lineStyle(128, 0x00ff00, 1);
 
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
 
-        this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
-        this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
-        
-        this.timeSlowText = this.add.text(centerX - 40, playHUDY, 'Time slow:', playConfig).setOrigin(0.5, 0.5);
-        playConfig.fixedWidth = 100;
-        this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
- 
-        this.add.line(centerX, centerY, 0, 0, gameWidth, gameHeight, 0x000000);
+        // this.add.line(centerX, centerY, 0, 0, gameWidth, gameHeight, 0x000000);
 
         // Player
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
@@ -56,17 +50,33 @@ class Play extends Phaser.Scene {
         // ObstacleSpawner(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) 
         this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -300, -200, -600, 600, 1);
 
-        this.timeText = this.add.text(32, 32, 'Time: 0');
+        // HUD boxes
+        this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
+
+        // Current time/distance ran
+        this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
+        this.timeTextLeft = this.add.text(50, playHUDY + 17, '0', playConfig).setOrigin(0.5, 0.5);
+        this.timeTextRight = this.add.text(170, playHUDY + 17, 'meters', playConfig).setOrigin(0.5, 0.5);
         currTime = 0;
         sceneClock = this.time.addEvent({
             delay: 1000, 
             callback: () => {
                 currTime ++;
-                this.timeText.setText('Time: ' + currTime);
+                this.timeTextLeft.setText(currTime);
             }, 
             callbackContext: this,
             loop: true,
         });
+
+        this.highScoreTop = this.add.text(centerX + centerX/2 + 120, playHUDY - 15, 'High Score: ', playConfig).setOrigin(0.5, 0.5);
+        this.highScoreLeft = this.add.text(gameWidth - 240, playHUDY + 17, highScore, playConfig).setOrigin(0.5, 0.5);
+        this.highScoreRight = this.add.text(gameWidth - 120, playHUDY + 17, 'meters', playConfig).setOrigin(0.5, 0.5);
+
+        this.timeSlowText = this.add.text(centerX - 30, playHUDY, 'Time slow:', playConfig).setOrigin(0.5, 0.5);
+        playConfig.fixedWidth = 100;
+        this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
+
     }
 
     update() {
@@ -125,6 +135,7 @@ class Play extends Phaser.Scene {
                     this.physics.world.timeScale = slowedTimeScale;
                 }
             } else {
+                this.cameras.main.clearTint();
                 if(this.physics.world.timeScale > normTimeScale){
                     this.physics.world.timeScale -= 0.01; 
                 } else {

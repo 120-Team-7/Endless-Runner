@@ -81,8 +81,11 @@ var slowedTimeScale = 1.25;
 var slowmoTime = 5000;
 
 // Player pyschic throw
-var minDragSpeed = 300;
-var maxDragSpeed = 500;
+var preThrowDrag = 150;
+var preThrowMinSpeed = 100;
+var minThrowSpeed = 300;
+var maxThrowSpeed = 600;
+var psychicThrowTime = 500;
 
 // Game controls
 var keyLeft, keyRight, keyJump, keySlowmo, keyStart;
