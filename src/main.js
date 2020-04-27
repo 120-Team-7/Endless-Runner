@@ -36,6 +36,10 @@ var textSpacer = 64;
 var playHUDHeight = 100;
 var playHUDY = gameHeight - playHUDHeight/2;
 
+// Text settings
+var timeSlowReady = '#32CD32'; // Lime green
+var timeSlowDuring = '#000000'; // Black
+var timeSlowNotReady = '#B22222'; // Crimson
 
 // Game globals
 var isGameOver = false;
@@ -55,10 +59,11 @@ var ground;
 var platforms;
 var player = null;
 
-// player statuses
+// Player statuses
 var isJumping = false;
 var isGrounded = false;
-var hasJumped = false;
+var timeSlowLock = false;
+var timeSlowCooldown = 2000;
 var isHit = false;
 
 // Player run movemment
@@ -79,6 +84,7 @@ var airDrag = 100;
 var normTimeScale = 0.75;
 var slowedTimeScale = 1.25;
 var slowmoTime = 5000;
+var slowRate = 0.005; // change in physics frame speed every frame
 
 // Player pyschic throw
 var preThrowDrag = 150;

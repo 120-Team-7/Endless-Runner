@@ -74,9 +74,11 @@ class Play extends Phaser.Scene {
         this.highScoreRight = this.add.text(gameWidth - 120, playHUDY + 17, 'meters', playConfig).setOrigin(0.5, 0.5);
 
         this.timeSlowText = this.add.text(centerX - 30, playHUDY, 'Time slow:', playConfig).setOrigin(0.5, 0.5);
+        this.timeSlowText.setStyle({
+            color: timeSlowReady
+        });
         playConfig.fixedWidth = 100;
         this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
-
     }
 
     update() {
@@ -106,6 +108,8 @@ class Play extends Phaser.Scene {
                     
                 }
             }
+
+            // Flip player sprite based on x velocity
             if(player.body.velocity.x > 0) {
                 player.flipX = false;
             }
@@ -127,21 +131,43 @@ class Play extends Phaser.Scene {
                 isJumping = false;
             }
 
-            // Time slow  
-            if(Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
+            // Time slow
+            if(timeSlowLock == false && Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
+                // Show time slow being used
+                this.timeSlowText.setStyle({
+                    color: timeSlowDuring
+                });
+                // Increase timescale until reach slowedTimeScale
                 if(this.physics.world.timeScale < slowedTimeScale){
-                    this.physics.world.timeScale += 0.01; 
+                    this.physics.world.timeScale += slowRate; 
                 } else {
                     this.physics.world.timeScale = slowedTimeScale;
                 }
-            } else {
-                this.cameras.main.clearTint();
+            } else if(this.physics.world.timeScale != normTimeScale) {
+                timeSlowLock = true;
+                this.timeSlowText.setStyle({
+                    color: timeSlowNotReady
+                });
+                // After slowmoTime is up, decrease timescale until reach normTimeScale
                 if(this.physics.world.timeScale > normTimeScale){
-                    this.physics.world.timeScale -= 0.01; 
+                    this.physics.world.timeScale -= slowRate; 
                 } else {
                     this.physics.world.timeScale = normTimeScale;
                 }
             }
+            
+            // Allow time slow use again after starting a cooldown when back to moral time and key isn't being pressed
+            if(Phaser.Input.Keyboard.JustUp(keySlowmo) && this.physics.world.timeScale == normTimeScale){
+                this.timeSlowDelay = this.time.delayedCall(timeSlowCooldown, () => {
+                    timeSlowLock = false;
+                    // Show time slow is ready
+                    this.timeSlowText.setStyle({
+                        color: timeSlowReady
+                    });
+                }, null, this);
+            }
+
+            // Update time slow Text
             this.percentSlow = Math.round(200*(this.physics.world.timeScale-normTimeScale));
             if (this.percentSlow % 10 == 0){
                 this.timeSlowNum.setText(this.percentSlow);
