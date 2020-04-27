@@ -3,8 +3,8 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         // call Phaser Physics Sprite constructor
         super(scene, spawnX, spawnY, 'log').setOrigin(0.5, 0.5).setInteractive(); 
         // set up physics sprite
-        scene.add.existing(this);               // add to existing scene, displayList, updateList
-        scene.physics.add.existing(this);       // add physics body
+        scene.add.existing(this); // add to existing scene, displayList, updateList
+        scene.physics.add.existing(this); // add physics body
         this.setCircle(30, 5, 5);
         this.setAngularVelocity(-logAngularVelocity);
         this.setVelocityX(velocityX);
@@ -13,11 +13,8 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
         let log = this;
 
-        // Add particles
-        this.particles = scene.add.particles('psychicParticle');
-
         this.emitCircle = new Phaser.Geom.Circle(this.x, this.y, 30);
-        log.particleInit = this.particles.createEmitter({
+        log.particleTrail = logParticles.createEmitter({
             emitZone: { source: this.emitCircle },
             alpha: { start: 1, end: 0},
             scale: { start: 1, end: 0},
@@ -27,9 +24,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             frequency: 50,
             quantity: 1,
         });
-        this.particleInit.stop();
-
-        this.exists = true;
+        log.particleTrail.stop();
 
         /*
         Psychic Throw
@@ -43,7 +38,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
             // Start log trailing particles and burst at pointer to show this pointer position (start)
-            log.particleInit.start();
+            gameObject.particleTrail.start();
             particlePointer.start();
         });
         
@@ -84,20 +79,15 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
             // Return gravity after short duration
             this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {
-                // console.log("in gravity return " + this.exists);
-                // if(this.exists == true){
-                    // console.log("gravity returned " + this.exists);
-                    gameObject.body.allowGravity = true;
-                // }
-                log.particleInit.stop();
+                gameObject.body.allowGravity = true;
+                log.particleTrail.stop();
                 particlePointer.stop();
             }, null, scene);
         });
 
         // Despawn after time to prevent player tossing logs up forever
         this.despawnTime = scene.time.delayedCall(logDespawnTime, () => {
-            this.exists = false;
-            log.particleInit.remove();
+            log.particleTrail.remove();
             this.group.remove(this, true, true);
         }, null, scene);
 
@@ -123,9 +113,9 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.x = gameWidth;
         }
         // Remove log from group & scene when off left screen
-        if(this.x < -200) {
+        if(this.x < -500) {
             this.exists = false;
-            this.particleInit.remove();
+            this.particleTrail.remove();
             this.group.remove(this, true, true);
         }
         

@@ -12,7 +12,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            // debug: true,
             gravity: {
                 y: gravityY
             }
@@ -35,6 +35,7 @@ var centerY = game.config.height/2;
 var textSpacer = 64;
 var playHUDHeight = 100;
 var playHUDY = gameHeight - playHUDHeight/2;
+var difficultY = 35;
 
 // Text settings
 var timeSlowReady = '#32CD32'; // Lime green
@@ -50,20 +51,24 @@ var highScore = 0;
 var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
-var logAngularVelocity = 540;
-var playHUDBox;
+var nextDifficultyLevel = 30000; // Time until next increase in difficulty
+var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
+var thisDifficultyLevel = 1;
 
 // Obstacle settings
-var logDespawnTime = 10000;
+var logAngularVelocity = 540;
+var logDespawnTime = 20000;
 
 // Game objects
 var background;
 var ground;
 var platform;
 var player = null;
+var pointer;
 var pointerCircle;
 var particlePointer;
-var pointer;
+var logParticles;
+var playHUDBox;
 
 // Player statuses
 var isJumping = false;
@@ -87,16 +92,16 @@ var playerInitSpeed = -300;
 var playerAirAccel = 15;
 var airDrag = 100;
 
-// Player slowmo
+// Player time slow
 var normTimeScale = 0.75;
 var slowedTimeScale = 1.25;
 var slowmoTime = 5000;
-var slowRate = 0.005; // change in physics frame speed every frame
+var slowRate = 0.005; // change in physics times scale every frame
 
 // Player pyschic throw
 var preThrowDrag = 150;
 var preThrowMinSpeed = 100;
-var minThrowSpeed = 300;
+var minThrowSpeed = 200;
 var maxThrowSpeed = 600;
 var psychicThrowTime = 500;
 

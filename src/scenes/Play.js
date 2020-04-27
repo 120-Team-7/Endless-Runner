@@ -10,12 +10,28 @@ class Play extends Phaser.Scene {
         keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
+        isGameOver = false;
+        timeSlowLock = false;
+        cooldownCalled = false;
+        isJumping = false;
+
         let playConfig = {
             fontFamily: 'Courier',
             fontSize: '40px',
             color: '#00000',
-            // strokeThickness: 5,
-            // stroke: '#4682B4',
+            align: 'center',
+            padding: {
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10,
+            },
+            fixedWidth: 0
+        }
+        let difficultyConfig = {
+            fontFamily: 'Courier',
+            fontSize: '40px',
+            color: '#00000',
             align: 'center',
             padding: {
                 top: 10,
@@ -35,6 +51,7 @@ class Play extends Phaser.Scene {
         player.body.setOffset(30, 25);
         player.setCollideWorldBounds(true);
         player.setMaxVelocity(maxVelocityX, maxVelocityY);
+        player.setDepth(5);
         this.physics.world.timeScale = normTimeScale;
         
         // Ground platform
@@ -42,27 +59,14 @@ class Play extends Phaser.Scene {
         platform.create(centerX, 415, 'invisibleGround').setOrigin(0.5);
         this.physics.add.collider(player, platform);
 
-        // Add particles
-        this.particles = this.add.particles('psychicParticle');
-        // Particles for pointer
-        pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
-        particlePointer = this.particles.createEmitter({
-            emitZone: { source: pointerCircle},
-            alpha: { start: 1, end: 0},
-            scale: { start: 1.5, end: 0},
-            speed: {min: 0, max: 40},
-            lifespan: 4000,
-            frequency: 10000,
-            quantity: 15,
-        });
-        particlePointer.stop();
-
         // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
-        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -200, -400, -600, 600, 1);
+        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -200, -300, 0, 400, 1);
 
         // HUD boxes
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, difficultY, 335, 70, 0x808080).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, difficultY, 315, 50, 0xC0C0C0).setOrigin(0.5,0.5);
 
         // Current time/distance ran text
         this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
@@ -91,6 +95,36 @@ class Play extends Phaser.Scene {
         });
         playConfig.fixedWidth = 100;
         this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
+
+        // Difficulty level text
+        thisDifficultyLevel = 1;
+        this.difficultText = this.add.text(centerX, difficultY, 'Difficulty: ' + thisDifficultyLevel, difficultyConfig).setOrigin(0.5, 0.5);
+        this.difficultyTimer = this.time.addEvent({
+            delay: nextDifficultyLevel,
+            callback: () => {
+                thisDifficultyLevel++;
+                this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
+                this.spawner = new ObstacleSpawner(this, 5000, 6000, -200, -300, 0, 400, 1),
+                console.log("new spawner");
+            },
+            callbackScope: this,
+            repeat: difficultyLevelMax
+        });
+
+         // Add particles
+         this.pointerParticles = this.add.particles('psychicParticlePointer');
+         // Particles for pointer
+         pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
+         particlePointer = this.pointerParticles.createEmitter({
+             emitZone: { source: pointerCircle},
+             alpha: { start: 1, end: 0},
+             scale: { start: 1, end: 0},
+             speed: {min: 0, max: 20},
+             lifespan: 4000,
+             frequency: 10000,
+             quantity: 10,
+         });
+         particlePointer.stop();
     }
 
     update() {

@@ -68,6 +68,9 @@ class GameOver extends Phaser.Scene {
 
         // update globals
         isGameOver = false;
+        timeSlowLock = false;
+        cooldownCalled = false;
+        isJumping = false;
     }
 
     update() {

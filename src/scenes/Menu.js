@@ -37,8 +37,8 @@ class Menu extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.start('playScene');
         }
-        if (Phaser.Input.Keyboard.JustDown(keySlowmo)) {
-            this.scene.start('gameOverScene');
-        }
+        // if (Phaser.Input.Keyboard.JustDown(keySlowmo)) {
+        //     this.scene.start('gameOverScene');
+        // }
     }
 }

@@ -9,12 +9,16 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
         scene.physics.add.collider(this, platform);
         // collide with the player
         scene.physics.add.overlap(player, this, this.playerHit, null, scene);
+        // Add particles
+        logParticles = scene.add.particles('psychicParticle');
+        // Spawn timer
         scene.timer = scene.time.addEvent({
             delay: Phaser.Math.Between(delayMin, delayMax), 
             callback: () => {
-                // scene.log = new Log(scene, this, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce);
                 if(!this.isFull()){
-                    this.add(new Log(scene, this, gameWidth + 100, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
+                    // Log(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce)
+                    this.add(new Log(scene, this, gameWidth + 100, Phaser.Math.Between(100, centerY),
+                        Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
                 }
             }, 
             callbackContext: scene,
@@ -36,6 +40,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
         isGameOver = true;
         sceneClock.paused = true;
         player.body.setDragX(groundDrag);
-        this.time.delayedCall(2000, () => { this.scene.start('gameOverScene') })
+        this.time.delayedCall(2000, () => {
+            this.scene.start('gameOverScene') })
     }
 }

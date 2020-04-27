@@ -11,6 +11,7 @@ class Load extends Phaser.Scene {
         this.load.image('background', './assets/background.png');
         this.load.image('log', './assets/log.png');
         this.load.image('psychicParticle', './assets/psychicParticle.png');
+        this.load.image('psychicParticlePointer', './assets/psychicParticlePointer.png');
     }
 
     create() {
