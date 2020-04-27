@@ -65,8 +65,8 @@ class Play extends Phaser.Scene {
         // HUD boxes
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
-        this.add.rectangle(centerX, difficultY, 335, 70, 0x808080).setOrigin(0.5,0.5);
-        this.add.rectangle(centerX, difficultY, 315, 50, 0xC0C0C0).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, difficultY, 340, 70, 0x808080).setOrigin(0.5,0.5);
+        this.add.rectangle(centerX, difficultY, 320, 50, 0xC0C0C0).setOrigin(0.5,0.5);
 
         // Current time/distance ran text
         this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
@@ -155,10 +155,10 @@ class Play extends Phaser.Scene {
             }
 
             // Flip player sprite based on x velocity
-            if(player.body.velocity.x > 0) {
+            if(player.body.velocity.x > 5) {
                 player.flipX = false;
             }
-            if(player.body.velocity.x < 0) {
+            if(player.body.velocity.x < -5) {
                 player.flipX = true;
             }
     

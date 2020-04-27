@@ -12,7 +12,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            // debug: true,
+            debug: true,
             gravity: {
                 y: gravityY
             }
@@ -32,14 +32,14 @@ var gameWidth = game.config.width;
 var gameHeight = game.config.height;
 var centerX = game.config.width/2;
 var centerY = game.config.height/2;
-var textSpacer = 64;
+var textSpacer = 80;
 var playHUDHeight = 100;
 var playHUDY = gameHeight - playHUDHeight/2;
 var difficultY = 35;
 
 // Text settings
-var timeSlowReady = '#32CD32'; // Lime green
-var timeSlowDuring = '#000000'; // Black
+var timeSlowReady = '#008000'; // Green
+var timeSlowDuring = '#DA70D6'; // Orchid
 var timeSlowNotReady = '#B22222'; // Crimson
 var psychicThrowInit = '#DA70D6'; // Orchid
 var psychicThrowDuring = '#FF00FF'; // Magenta

@@ -1,8 +1,8 @@
 class Log extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce) {
-        // call Phaser Physics Sprite constructor
+        // Call Phaser Physics Sprite constructor
         super(scene, spawnX, spawnY, 'log').setOrigin(0.5, 0.5).setInteractive(); 
-        // set up physics sprite
+        // Set up physics sprite
         scene.add.existing(this); // add to existing scene, displayList, updateList
         scene.physics.add.existing(this); // add physics body
         this.setCircle(30, 5, 5);
@@ -57,8 +57,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
             // Set velocity magnitude to minDragSpeed if drag distance is shorter than min
             if(this.totalDist < minThrowSpeed){
-                // Converts the xDist, yDist components into xSpeed, ySpeed components in order to achieve minThrowSpeed (diagonal speed) on combining components
-                // Uses Pythagorean theorum to solve for scaleFactor given a, b, and c where c is minThrowSpeed and a, b are xDist, yDist
+                // Converts the xDist, yDist components into xSpeed, ySpeed components in order to achieve minThrowSpeed (diagonal speed) on combining components. Uses Pythagorean theorum to solve for scaleFactor given a, b, and c where c is minThrowSpeed and a, b are xDist, yDist
                 this.minScaleFactor = Math.sqrt(Math.pow(Math.abs(this.xDist), 2) + Math.pow(Math.abs(this.yDist), 2)) / minThrowSpeed;
                 // Converts distance components into velocity components that total to minThrowSpeed
                 this.throwVelocityX = this.xDist / this.minScaleFactor;       
@@ -118,6 +117,5 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.particleTrail.remove();
             this.group.remove(this, true, true);
         }
-        
     }
 }

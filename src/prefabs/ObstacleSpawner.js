@@ -8,7 +8,9 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
         // bounce on ground
         scene.physics.add.collider(this, platform);
         // collide with the player
-        scene.physics.add.overlap(player, this, this.playerHit, null, scene);
+        if(!isHit){
+            scene.physics.add.overlap(player, this, this.playerHit, null, scene);
+        }
         // Add particles
         logParticles = scene.add.particles('psychicParticle');
         // Spawn timer
@@ -35,12 +37,16 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
     }
 
     playerHit(){
+        // Camera effects
         this.cameras.main.flash(1000);
         this.cameras.main.shake(500, 0.01);
+        // Update variables
         isGameOver = true;
+        isHit = true;
         sceneClock.paused = true;
         player.body.setDragX(groundDrag);
-        this.time.delayedCall(2000, () => {
+        // Delay change to game over scene
+        this.time.delayedCall(3000, () => {
             this.scene.start('gameOverScene') })
     }
 }

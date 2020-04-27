@@ -59,6 +59,7 @@ class GameOver extends Phaser.Scene {
         // Add text
         this.add.text(centerX, centerY - textSpacer, 'You ran ' + currTime + ' meters of the Psychic Trials!', gameOverConfig).setOrigin(0.5);
         this.add.text(centerX, centerY, 'Press enter to restart', gameOverConfig).setOrigin(0.5);
+        gameOverConfig.color = '#FF00FF';
         if(currTime > highScore){
             highScore = currTime;
             this.add.text(centerX, centerY + textSpacer, 'NEW HIGH SCORE: ' + highScore, gameOverConfig).setOrigin(0.5);

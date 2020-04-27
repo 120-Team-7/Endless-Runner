@@ -12,8 +12,8 @@ class Menu extends Phaser.Scene {
 
         let menuConfig = {
             fontFamily: 'Courier',
-            fontSize: '40px',
-            color: '#FFFFFF',
+            fontSize: '100px',
+            color: '#FF00FF',
             align: 'center',
             padding: {
                 top: 10,
@@ -24,11 +24,12 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
         // add menu screen text
-        this.add.text(centerX, centerY - 3*textSpacer, 'Psychic Trials', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, (centerY - textSpacer)/2, 'Psychic Trials', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
+        menuConfig.color = '#FFFFFF',
         this.add.text(centerX, centerY - textSpacer, 'A move left   D move right', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'W jump     SHIFT time slow', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + textSpacer, 'Click and drag obstacles to use Psychic Throw', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'W jump     Hold SHIFT time slow', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'Click, drag, release obstacles to use Psychic Throw', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 2*textSpacer, 'Press ENTER here to start or return to menu elsewhere', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
     }
