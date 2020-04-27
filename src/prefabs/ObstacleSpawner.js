@@ -6,7 +6,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
         }
         super(scene, null, groupConfig);
         // bounce on ground
-        scene.physics.add.collider(this, platforms);
+        scene.physics.add.collider(this, platform);
         // collide with the player
         scene.physics.add.overlap(player, this, this.playerHit, null, scene);
         scene.timer = scene.time.addEvent({
@@ -14,7 +14,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
             callback: () => {
                 // scene.log = new Log(scene, this, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce);
                 if(!this.isFull()){
-                    this.add(new Log(scene, this, gameWidth, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
+                    this.add(new Log(scene, this, gameWidth + 100, centerY, Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
                 }
             }, 
             callbackContext: scene,

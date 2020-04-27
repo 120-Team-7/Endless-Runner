@@ -1,33 +1,61 @@
 class Log extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce) {
         // call Phaser Physics Sprite constructor
-        super(scene, spawnX, spawnY, '').setOrigin(0,0).setInteractive(); 
+        super(scene, spawnX, spawnY, 'log').setOrigin(0.5, 0.5).setInteractive(); 
         // set up physics sprite
         scene.add.existing(this);               // add to existing scene, displayList, updateList
         scene.physics.add.existing(this);       // add physics body
+        this.setCircle(30, 5, 5);
+        this.setAngularVelocity(-logAngularVelocity);
         this.setVelocityX(velocityX);
         this.setVelocityY(velocityY);
         this.setBounceY(logBounce);
 
+        let log = this;
+
+        // Add particles
+        this.particles = scene.add.particles('psychicParticle');
+
+        this.emitCircle = new Phaser.Geom.Circle(this.x, this.y, 30);
+        log.particleInit = this.particles.createEmitter({
+            emitZone: { source: this.emitCircle },
+            alpha: { start: 1, end: 0},
+            scale: { start: 1, end: 0},
+            speedX: this.body.velocity.x/10,
+            speedY: this.body.velocity.y/10,
+            lifespan: 2000,
+            frequency: 50,
+            quantity: 1,
+        });
+        this.particleInit.stop();
+
         this.exists = true;
 
-        // Pyschic throw
+        /*
+        Psychic Throw
+        Log is slowed on initial click and while holding click down. Log's velocity is set based on the vector formed by the distance between the pointer position on first clicking the log and the pointer position after releasing click. After releasing click, the log's velocity is set and it continues parallel to this vector for a short moment without gravity before gravity is returned. 
+        */
         scene.input.setDraggable(this);
-        scene.input.on('dragstart', function (pointer, gameObject) {
-            console.log("gottem");
+        scene.input.on('dragstart', function (pointer, gameObject,) {
             // Slow log on initial click
             gameObject.body.setDrag(preThrowDrag, preThrowDrag)
-            // Store this pointer position
+            // Store this initial pointer position
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
+            // Start log trailing particles and burst at pointer to show this pointer position (start)
+            log.particleInit.start();
+            particlePointer.start();
         });
         
         scene.input.on('dragend', function (pointer, gameObject) {
+            // Particle burst at pointer to show this pointer position (end)
+            particlePointer.start();
             // No grav for now
             gameObject.body.allowGravity = false;
             // Reset drag
             gameObject.body.setDrag(0, 0);
 
+            // Calculate measurements
             this.xDist = pointer.x - this.initPointerX;
             this.yDist = pointer.y - this.initPointerY;
             this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
@@ -50,7 +78,6 @@ class Log extends Phaser.Physics.Arcade.Sprite {
                 this.throwVelocityX = this.xDist;       
                 this.throwVelocityY = this.yDist;
             }
-
             
             gameObject.body.velocity.x = this.throwVelocityX;
             gameObject.body.velocity.y = this.throwVelocityY;
@@ -62,12 +89,15 @@ class Log extends Phaser.Physics.Arcade.Sprite {
                     // console.log("gravity returned " + this.exists);
                     gameObject.body.allowGravity = true;
                 // }
+                log.particleInit.stop();
+                particlePointer.stop();
             }, null, scene);
         });
 
         // Despawn after time to prevent player tossing logs up forever
         this.despawnTime = scene.time.delayedCall(logDespawnTime, () => {
             this.exists = false;
+            log.particleInit.remove();
             this.group.remove(this, true, true);
         }, null, scene);
 
@@ -75,24 +105,29 @@ class Log extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
+        this.emitCircle.setPosition(this.x, this.y);
+
+        // Change angular velocity based on moving direction
+        if(this.body.velocity.x < 0){
+            this.setAngularVelocity(-logAngularVelocity);
+        } else{
+            this.setAngularVelocity(logAngularVelocity);
+        }
         // Enforce pre throw slow down min speed
         if(Math.abs(this.body.velocity.x) < preThrowMinSpeed || Math.abs(this.body.velocity.y) < preThrowMinSpeed){
             this.body.setDrag(0, 0);
         }
-        // Remove log from group & scene when off left screen
-        if(this.x < 50) {
-            this.exists = false;
-            this.group.remove(this, true, true);
-            // console.log("despawn " + this.exists);
-        }
-        // Reflectlog back left if log goes off right screen
+        // Reflect log back left if log goes off right screen
         if(this.x > gameWidth + 100) {
             this.body.velocity.x = -this.body.velocity.x;
             this.x = gameWidth;
-            // Reset to defualt y if current y wouldn't result in log returning on screen
-            if(this.y > centerY){
-                this.y = centerY
-            }
         }
+        // Remove log from group & scene when off left screen
+        if(this.x < -200) {
+            this.exists = false;
+            this.particleInit.remove();
+            this.group.remove(this, true, true);
+        }
+        
     }
 }

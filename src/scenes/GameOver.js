@@ -10,6 +10,22 @@ class GameOver extends Phaser.Scene {
         keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
+        let gameOverConfig = {
+            fontFamily: 'Courier',
+            fontSize: '40px',
+            color: '#FFFFFF',
+            // strokeThickness: 5,
+            // stroke: '#4682B4',
+            align: 'center',
+            padding: {
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10,
+            },
+            fixedWidth: 0
+        }
+
         // // check for high score in local storage
         // // uncomment console.log statements if you need to debug local storage
         // if(localStorage.getItem('hiscore') != null) {
@@ -41,13 +57,13 @@ class GameOver extends Phaser.Scene {
         // this.add.text(centerX, centerY + textSpacer, `This browser's best: ${highScore}s`, { fontFamily: 'Helvetica', fontSize: '32px', color: '#FACADE' }).setOrigin(0.5);
 
         // Add text
-        this.add.text(centerX, centerY + textSpacer, 'Press enter to restart', { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
-
+        this.add.text(centerX, centerY - textSpacer, 'You ran ' + currTime + ' meters of the Psychic Trials!', gameOverConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'Press enter to restart', gameOverConfig).setOrigin(0.5);
         if(currTime > highScore){
             highScore = currTime;
-            this.add.text(centerX, centerY + 2*textSpacer, 'NEW HIGH SCORE: ' + highScore, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+            this.add.text(centerX, centerY + textSpacer, 'NEW HIGH SCORE: ' + highScore, gameOverConfig).setOrigin(0.5);
         } else {
-            this.add.text(centerX, centerY + 2*textSpacer, 'High score: ' + highScore, { fontFamily: 'Helvetica', fontSize: '24px', color: '#FFF' }).setOrigin(0.5);
+            this.add.text(centerX, centerY + textSpacer, 'High score: ' + highScore, gameOverConfig).setOrigin(0.5);
         }
 
         // update globals

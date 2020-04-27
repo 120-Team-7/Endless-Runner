@@ -40,14 +40,17 @@ var playHUDY = gameHeight - playHUDHeight/2;
 var timeSlowReady = '#32CD32'; // Lime green
 var timeSlowDuring = '#000000'; // Black
 var timeSlowNotReady = '#B22222'; // Crimson
+var psychicThrowInit = '#DA70D6'; // Orchid
+var psychicThrowDuring = '#FF00FF'; // Magenta
 
 // Game globals
 var isGameOver = false;
 var sceneClock;
 var highScore = 0;
-var currTime;               // Track this round's time
+var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
+var logAngularVelocity = 540;
 var playHUDBox;
 
 // Obstacle settings
@@ -56,14 +59,18 @@ var logDespawnTime = 10000;
 // Game objects
 var background;
 var ground;
-var platforms;
+var platform;
 var player = null;
+var pointerCircle;
+var particlePointer;
+var pointer;
 
 // Player statuses
 var isJumping = false;
 var isGrounded = false;
 var timeSlowLock = false;
-var timeSlowCooldown = 2000;
+var cooldownCalled = false;
+var timeSlowCooldown = 3000;
 var isHit = false;
 
 // Player run movemment

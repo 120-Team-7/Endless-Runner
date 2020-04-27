@@ -12,22 +12,23 @@ class Menu extends Phaser.Scene {
 
         let menuConfig = {
             fontFamily: 'Courier',
-            fontSize: '100px',
-            // backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
+            fontSize: '40px',
+            color: '#FFFFFF',
+            align: 'center',
             padding: {
-                top: 5,
-                bottom: 5,
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10,
             },
             fixedWidth: 0
         }
         // add menu screen text
         this.add.text(centerX, centerY - 3*textSpacer, 'Psychic Trials', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY - textSpacer, 'A move left   D move right    W jump', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'SHIFT time slow', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + textSpacer, 'Click and drag obstacles to use pyschic throw', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY - textSpacer, 'A move left   D move right', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'W jump     SHIFT time slow', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'Click and drag obstacles to use Psychic Throw', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 2*textSpacer, 'Press ENTER here to start or return to menu elsewhere', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
     }
@@ -35,6 +36,9 @@ class Menu extends Phaser.Scene {
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.start('playScene');
+        }
+        if (Phaser.Input.Keyboard.JustDown(keySlowmo)) {
+            this.scene.start('gameOverScene');
         }
     }
 }

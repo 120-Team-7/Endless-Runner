@@ -3,7 +3,6 @@ class Play extends Phaser.Scene {
         super('playScene');
     }
 
-
     create() {
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
@@ -26,35 +25,46 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-
-        // graphics = this.add.graphics();
-        // graphics.fillStyle(0xC0C0C0, 1);
-        // graphics.lineStyle(128, 0x00ff00, 1);
-
+        // Add scrolling background
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
 
-        // this.add.line(centerX, centerY, 0, 0, gameWidth, gameHeight, 0x000000);
-
-        // Player
-        player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5);
+        // Create player
+        player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5, 0.5);
+        player.body.setSize(30, 105);
+        player.body.setOffset(30, 25);
         player.setCollideWorldBounds(true);
         player.setMaxVelocity(maxVelocityX, maxVelocityY);
         this.physics.world.timeScale = normTimeScale;
         
-        // Platforms
-        platforms = this.physics.add.staticGroup();
-        platforms.create(gameWidth/2, 415, 'invisibleGround').setOrigin(0.5);
-        this.physics.add.collider(player, platforms);
+        // Ground platform
+        platform = this.physics.add.staticGroup();
+        platform.create(centerX, 415, 'invisibleGround').setOrigin(0.5);
+        this.physics.add.collider(player, platform);
 
-        // ObstacleSpawner(scene, platforms, delayMin, delayMax, minX, maxX, minY, maxY) 
-        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -300, -200, -600, 600, 1);
+        // Add particles
+        this.particles = this.add.particles('psychicParticle');
+        // Particles for pointer
+        pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
+        particlePointer = this.particles.createEmitter({
+            emitZone: { source: pointerCircle},
+            alpha: { start: 1, end: 0},
+            scale: { start: 1.5, end: 0},
+            speed: {min: 0, max: 40},
+            lifespan: 4000,
+            frequency: 10000,
+            quantity: 15,
+        });
+        particlePointer.stop();
+
+        // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
+        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -200, -400, -600, 600, 1);
 
         // HUD boxes
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
 
-        // Current time/distance ran
+        // Current time/distance ran text
         this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
         this.timeTextLeft = this.add.text(50, playHUDY + 17, '0', playConfig).setOrigin(0.5, 0.5);
         this.timeTextRight = this.add.text(170, playHUDY + 17, 'meters', playConfig).setOrigin(0.5, 0.5);
@@ -69,10 +79,12 @@ class Play extends Phaser.Scene {
             loop: true,
         });
 
+        // High score text
         this.highScoreTop = this.add.text(centerX + centerX/2 + 120, playHUDY - 15, 'High Score: ', playConfig).setOrigin(0.5, 0.5);
         this.highScoreLeft = this.add.text(gameWidth - 240, playHUDY + 17, highScore, playConfig).setOrigin(0.5, 0.5);
         this.highScoreRight = this.add.text(gameWidth - 120, playHUDY + 17, 'meters', playConfig).setOrigin(0.5, 0.5);
 
+        // Time slow text
         this.timeSlowText = this.add.text(centerX - 30, playHUDY, 'Time slow:', playConfig).setOrigin(0.5, 0.5);
         this.timeSlowText.setStyle({
             color: timeSlowReady
@@ -88,24 +100,23 @@ class Play extends Phaser.Scene {
 
         if(!isGameOver){
             if(isGrounded){
-                // ground movement
+                // Ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerRunAccel;
                 } else {
-                    // Set drag when not inputting movement
+                    // Set drag when not inputting movement 
                     player.body.setDragX(groundDrag);
                 }
             } else {
-                // air movement
-                // set drag always when in air, decreased control while in air
+                // Air movement
+                // Set drag always when in air, decreased control while in air
                 player.body.setDragX(airDrag);
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerAirAccel;
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerAirAccel;
-                    
                 }
             }
 
@@ -131,7 +142,14 @@ class Play extends Phaser.Scene {
                 isJumping = false;
             }
 
-            // Time slow
+            /*
+            Time slow
+            Hold down SHIFT to start and continue time slow based on physics time scale where higher scale results
+            in slower time. Time scale steadily increases until reaching the maximum. On releasing shift or
+            reaching the max duration, time scale steadily decreases until it reaches the given normal time scale.
+            Cooldown starts when player releases SHIFT. Until the cooldown is over, the player is locked out from
+            using time slow again. 
+            */
             if(timeSlowLock == false && Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
                 // Show time slow being used
                 this.timeSlowText.setStyle({
@@ -143,7 +161,9 @@ class Play extends Phaser.Scene {
                 } else {
                     this.physics.world.timeScale = slowedTimeScale;
                 }
+            // Either the player releases timeslow key or the duration is up
             } else if(this.physics.world.timeScale != normTimeScale) {
+                // Prevent player from using again until cooldown
                 timeSlowLock = true;
                 this.timeSlowText.setStyle({
                     color: timeSlowNotReady
@@ -155,11 +175,14 @@ class Play extends Phaser.Scene {
                     this.physics.world.timeScale = normTimeScale;
                 }
             }
-            
-            // Allow time slow use again after starting a cooldown when back to moral time and key isn't being pressed
-            if(Phaser.Input.Keyboard.JustUp(keySlowmo) && this.physics.world.timeScale == normTimeScale){
+            // Start cooldown when conditions are met
+            // Conditions: cooldownCalled needed to prevent multiple cooldowns, timeSlowLock to tell if has been
+            // used, and justUp to force the player to release SHIFT to start the cooldown.
+            if(cooldownCalled == false && timeSlowLock == true && Phaser.Input.Keyboard.JustUp(keySlowmo)){
+                cooldownCalled = true;
                 this.timeSlowDelay = this.time.delayedCall(timeSlowCooldown, () => {
                     timeSlowLock = false;
+                    cooldownCalled = false;
                     // Show time slow is ready
                     this.timeSlowText.setStyle({
                         color: timeSlowReady
@@ -167,18 +190,25 @@ class Play extends Phaser.Scene {
                 }, null, this);
             }
 
-            // Update time slow Text
+            // Update time slow text
+            // Based on percentage of time slow with 0 being normal and 100 being max time slow
             this.percentSlow = Math.round(200*(this.physics.world.timeScale-normTimeScale));
             if (this.percentSlow % 10 == 0){
                 this.timeSlowNum.setText(this.percentSlow);
             }
         }
 
+        // Return to menu input
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
-            this.scene.start('gameOverScene');
+            this.scene.start('menuScene');
         }
 
-        // scroll background and ground
+        // Update particle emit zone for pointer
+        pointer = this.input.activePointer;
+        pointerCircle.setPosition(pointer.worldX, pointer.worldY);
+
+        // Scroll background and ground and modify based on time slow
+        // Slows by 0.33 at 100% time slow and 0 at 0%
         background.tilePositionX += backgroundScroll - (0.33)*backgroundScroll*(this.percentSlow/100);
         ground.tilePositionX += groundScroll - (0.33)*groundScroll*(this.percentSlow/100);
     }
