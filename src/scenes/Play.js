@@ -218,9 +218,9 @@ class Play extends Phaser.Scene {
                 // Increase timescale until reach slowedTimeScale
                 if(this.physics.world.timeScale < slowedTimeScale){
                     this.physics.world.timeScale += slowRate;
+                    // Slow down global sound rate
                     if(game.sound.rate > slowedSoundRate) { game.sound.rate -= soundRateChange; } else {
                         game.sound.rate = slowedSoundRate;
-                        console.log(game.sound.rate);
                     }
                 } else {
                     this.physics.world.timeScale = slowedTimeScale;
@@ -235,9 +235,9 @@ class Play extends Phaser.Scene {
                 // After slowmoTime is up, decrease timescale until reach normTimeScale
                 if(this.physics.world.timeScale > normTimeScale){
                     this.physics.world.timeScale -= slowRate;
+                    // Speed up global sound rate
                     if(game.sound.rate < normalSoundRate) { game.sound.rate += soundRateChange; } else{
                         game.sound.rate = normalSoundRate;
-                        console.log(game.sound.rate);
                     }
                 } else {
                     this.physics.world.timeScale = normTimeScale;
