@@ -1,4 +1,4 @@
-var gravityY = 800;
+var gravityY = 600;
 
 // define and configure main Phaser game object
 let config = {
@@ -52,16 +52,17 @@ var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
-var difficultyLevelMax = 3;     // Number of spawners spawned on max difficulty + 2
+var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
-var spawnTime = 4000;
-var spawnTimeMax = 4000;
+var spawnTime = 3000;
+var spawnTimeMax = 3000;
 var spawnTimeMin = 2000;
+var count = 1;
 
 // Obstacle settings
 var logAngularVelocity = 540;
 var logDespawnTime = 10000;
-var logPreventInfiniteTime = 10000;
+var logPreventInfiniteTime = 20000;
 
 // Game objects
 var background;
@@ -91,8 +92,8 @@ var playerRunAccel = 100;
 var groundDrag = 500;
 
 // Player jump movemment
-var holdJumpTime = 180;
-var playerJumpSpeed = -35;
+var holdJumpTime = 150;
+var playerJumpSpeed = -32;
 var playerInitSpeed = -300;
 
 var playerAirAccel = 15;

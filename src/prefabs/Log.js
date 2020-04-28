@@ -12,6 +12,8 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         this.setBounceY(logBounce);
 
         let log = this;
+        this.exists = true;
+        this.beenThrown = false;
 
         this.emitCircle = new Phaser.Geom.Circle(this.x, this.y, 30);
         log.particleTrail = logParticles.createEmitter({
@@ -35,12 +37,12 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         */
         scene.input.setDraggable(this);
         this.on('dragstart', function (pointer) {
+            this.beenThrown = true;
             // Slow log on initial click
             this.body.setDrag(preThrowDrag, 0);
             // Store this initial pointer position
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
-            console.log(pointer.x + " " + pointer.y);
             // Start log trailing particles and burst at pointer to show this pointer position (start)
             this.particleTrail.start();
             particlePointer.start();
@@ -99,11 +101,14 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
         // Despawn after certain time to prevent player tossing logs up forever
         this.infinitePrevent = scene.time.delayedCall(logPreventInfiniteTime, () => {
-            log.particleTrail.start();
-            scene.input.setDraggable(this, false);
-            this.body.velocity.y = 0;
-            this.body.velocity.x = -400;
-            this.setAlpha(0.5);
+            if(this.exists){
+                this.exists = false;
+                log.particleTrail.start();
+                scene.input.setDraggable(this, false);
+                this.body.velocity.y = 0;
+                this.body.velocity.x = -400;
+                this.setAlpha(0.5);
+            }
         }, null, scene);
 
         this.group = group;
@@ -124,13 +129,14 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.body.setDrag(0, 0);
         }
         // Reflect log back left if log goes off right screen
-        if(this.x > gameWidth + 100) {
+        if(this.x > gameWidth + 100 && this.beenThrown) {
             this.body.velocity.x = -this.body.velocity.x;
             this.x = gameWidth;
         }
         // Countdown remove log from group & scene when off left screen
         if(this.x < 0) {
             this.despawnTime = this.scene.time.delayedCall(logDespawnTime, () => {
+                this.exists = false;
                 this.particleTrail.remove();
                 this.group.remove(this, true, true);
             }, null, this.scene);

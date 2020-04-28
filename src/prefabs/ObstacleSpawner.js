@@ -2,34 +2,46 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
     constructor(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce) {
         let groupConfig = {
             runChildUpdate: true,
-            maxSize: 5
+            maxSize: 10000
         }
         super(scene, null, groupConfig);
-        // bounce on ground
+        // Bounce on ground
         scene.physics.add.collider(this, platform);
-        // collide with the player
+        // Collide with the player
         scene.physics.add.overlap(player, this, this.playerHit, null, scene);
-        // Add particles
-        logParticles = scene.add.particles('psychicParticle');
-        logParticles.setDepth(10);
         // Spawn timer
         scene.timer = scene.time.addEvent({
             delay: Phaser.Math.Between(delayMin, delayMax), 
             callback: () => {
                 if(!this.isFull()){
                     // Log(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce)
-                    this.add(new Log(scene, this, gameWidth + 100, Phaser.Math.Between(100, centerY),
+                    for(count = 0; count < thisDifficultyLevel; count++){
+                        if(!this.isFull()){
+                            let cascadeSpawn = gameWidth + 100 + count*Phaser.Math.Between(50, 300);
+                            this.add(new Log(scene, this, cascadeSpawn, Phaser.Math.Between(100, centerY),
                         Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
+                        }
+                    }
                 }
             }, 
             callbackContext: scene,
             loop: true,
         });
 
+        // scene.test = scene.time.addEvent({
+        //     delay: 1000, 
+        //     callback: () => {
+        //         console.log(scene.timer.getProgress() + " delay: " + scene.timer.delay)
+        //     }, 
+        //     callbackContext: scene,
+        //     loop: true,
+        // });
+
         this.scene = scene;
     }
 
     update() {
+        
         // Somehow needed to update children
         this.preUpdate();
         // this.scene.timer.getProgress()

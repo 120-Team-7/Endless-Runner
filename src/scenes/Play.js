@@ -44,11 +44,11 @@ class Play extends Phaser.Scene {
             fixedWidth: 0
         }
         // Add scrolling background
-        background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
-        ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+        background = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'background').setOrigin(0,0);
+        ground = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'ground').setOrigin(0,0);
 
         // Create player
-        player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5, 0.5);
+        player = this.physics.add.sprite(50, centerY + 50, 'player').setOrigin(0.5, 0.5);
         player.body.setSize(30, 105);
         player.body.setOffset(30, 25);
         player.setCollideWorldBounds(true);
@@ -58,11 +58,8 @@ class Play extends Phaser.Scene {
         
         // Ground platform
         platform = this.physics.add.staticGroup();
-        platform.create(centerX, 415, 'invisibleGround').setOrigin(0.5);
+        platform.create(gameWidth - 100, 415, 'invisibleGround').setOrigin(0.5);
         this.physics.add.collider(player, platform);
-
-        // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
-        this.spawner1 = new ObstacleSpawner(this, spawnTime, spawnTime, -200, -300, 0, 400, 1);
 
         // HUD boxes
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
@@ -98,6 +95,9 @@ class Play extends Phaser.Scene {
         playConfig.fixedWidth = 100;
         this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
 
+        // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
+        this.spawner1 = new ObstacleSpawner(this, spawnTime, spawnTime + 1000, -150, -300, 0, 400, 1);
+
         // Difficulty level text
         thisDifficultyLevel = 1;
         this.difficultText = this.add.text(centerX, difficultY, 'Difficulty: ' + thisDifficultyLevel, difficultyConfig).setOrigin(0.5, 0.5);
@@ -106,12 +106,9 @@ class Play extends Phaser.Scene {
             callback: () => {
                 thisDifficultyLevel++;
                 if(spawnTime != spawnTimeMin){
-                    spawnTime -= 250;
+                    spawnTime -= 500;
                 }
-                console.log("spawnTime: " + spawnTime);
                 this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
-                this.spawner = new ObstacleSpawner(this, spawnTime, spawnTime + 1000, -200, -300, 0, 400, 1),
-                console.log("new spawner");
             },
             callbackScope: this,
             repeat: difficultyLevelMax
@@ -120,6 +117,8 @@ class Play extends Phaser.Scene {
         // Add particles
         this.pointerParticles = this.add.particles('psychicParticlePointer');
         this.pointerParticles.setDepth(15);
+        logParticles = this.add.particles('psychicParticle');
+        logParticles.setDepth(10);
         // Initialize emit zones
         pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
         particleLine = new Phaser.Geom.Line(-200, -200, gameWidth, gameHeight);
