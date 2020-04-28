@@ -15,6 +15,7 @@ class Play extends Phaser.Scene {
         cooldownCalled = false;
         isJumping = false;
         isHit = false;
+        spawnTime = spawnTimeMax;
 
         let playConfig = {
             fontFamily: 'Courier',
@@ -104,9 +105,12 @@ class Play extends Phaser.Scene {
             delay: nextDifficultyLevel,
             callback: () => {
                 thisDifficultyLevel++;
+                if(spawnTime != spawnTimeMin){
+                    spawnTime -= 250;
+                }
+                console.log("spawnTime: " + spawnTime);
                 this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
-                spawnTime += 2000;
-                this.spawner = new ObstacleSpawner(this, spawnTime, spawnTime, -200, -300, 0, 400, 1),
+                this.spawner = new ObstacleSpawner(this, spawnTime, spawnTime + 1000, -200, -300, 0, 400, 1),
                 console.log("new spawner");
             },
             callbackScope: this,

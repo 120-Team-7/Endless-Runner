@@ -34,25 +34,25 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         parallel to this vector for a short moment without gravity before gravity is returned. 
         */
         scene.input.setDraggable(this);
-        scene.input.on('dragstart', function (pointer, gameObject,) {
+        this.on('dragstart', function (pointer) {
             // Slow log on initial click
-            gameObject.body.setDrag(preThrowDrag, 0);
+            this.body.setDrag(preThrowDrag, 0);
             // Store this initial pointer position
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
+            console.log(pointer.x + " " + pointer.y);
             // Start log trailing particles and burst at pointer to show this pointer position (start)
-            gameObject.particleTrail.start();
+            this.particleTrail.start();
             particlePointer.start();
         });
-        
-        scene.input.on('dragend', function (pointer, gameObject) {
+        this.on('dragend', function (pointer) {
             // No grav for now
-            gameObject.body.allowGravity = false;
+            this.body.allowGravity = false;
             // Reset drag
-            gameObject.body.setDrag(0, 0);
+            this.body.setDrag(0, 0);
             // Calculate measurements
-            this.xDist = pointer.x - this.initPointerX;
-            this.yDist = pointer.y - this.initPointerY;
+            this.xDist = pointer.x - log.initPointerX;
+            this.yDist = pointer.y - log.initPointerY;
             this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
             // Set particleLine
             particleLine.setTo(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
@@ -82,15 +82,15 @@ class Log extends Phaser.Physics.Arcade.Sprite {
                 this.throwVelocityY = this.yDist;
             }
             
-            gameObject.body.velocity.x = this.throwVelocityX;
-            gameObject.body.velocity.y = this.throwVelocityY;
+            this.body.velocity.x = this.throwVelocityX;
+            this.body.velocity.y = this.throwVelocityY;
 
             // Create paticleVector that matches and parallels the psychic throw vector
             particleVector.start();
             
             // Return gravity after short duration
             this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {
-                gameObject.body.allowGravity = true;
+                this.body.allowGravity = true;
                 log.particleTrail.stop();
                 particleVector.stop();
                 particlePointer.stop();

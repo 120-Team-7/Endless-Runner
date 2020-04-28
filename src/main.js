@@ -52,9 +52,11 @@ var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
-var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
+var difficultyLevelMax = 3;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
-var spawnTime = 3000;
+var spawnTime = 4000;
+var spawnTimeMax = 4000;
+var spawnTimeMin = 2000;
 
 // Obstacle settings
 var logAngularVelocity = 540;
