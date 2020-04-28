@@ -2,7 +2,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
     constructor(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce) {
         let groupConfig = {
             runChildUpdate: true,
-            maxSize: 10
+            maxSize: 20
         }
         super(scene, null, groupConfig);
         // bounce on ground

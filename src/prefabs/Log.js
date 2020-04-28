@@ -18,7 +18,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             emitZone: { source: this.emitCircle },
             alpha: { start: 1, end: 0},
             scale: { start: 1, end: 0},
-            speedX: this.body.velocity.x/10,
+            speedX: this.body.velocity.x - (0.8)*this.body.velocity.x,
             speedY: this.body.velocity.y/10,
             lifespan: 2000,
             frequency: 50,
@@ -36,7 +36,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         scene.input.setDraggable(this);
         scene.input.on('dragstart', function (pointer, gameObject,) {
             // Slow log on initial click
-            gameObject.body.setDrag(preThrowDrag, preThrowDrag)
+            gameObject.body.setDrag(preThrowDrag, 0);
             // Store this initial pointer position
             this.initPointerX = pointer.x;
             this.initPointerY = pointer.y;
@@ -120,7 +120,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.setAngularVelocity(logAngularVelocity);
         }
         // Enforce pre throw slow down min speed
-        if(Math.abs(this.body.velocity.x) < preThrowMinSpeed || Math.abs(this.body.velocity.y) < preThrowMinSpeed){
+        if(Math.abs(this.body.velocity.x) < preThrowMinSpeed){
             this.body.setDrag(0, 0);
         }
         // Reflect log back left if log goes off right screen

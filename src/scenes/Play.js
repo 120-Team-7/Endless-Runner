@@ -61,7 +61,7 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(player, platform);
 
         // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
-        this.spawner1 = new ObstacleSpawner(this, 3000, 4000, -200, -300, 0, 400, 1);
+        this.spawner1 = new ObstacleSpawner(this, spawnTime, spawnTime, -200, -300, 0, 400, 1);
 
         // HUD boxes
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
@@ -105,7 +105,8 @@ class Play extends Phaser.Scene {
             callback: () => {
                 thisDifficultyLevel++;
                 this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
-                this.spawner = new ObstacleSpawner(this, 5000, 6000, -200, -300, 0, 400, 1),
+                spawnTime += 2000;
+                this.spawner = new ObstacleSpawner(this, spawnTime, spawnTime, -200, -300, 0, 400, 1),
                 console.log("new spawner");
             },
             callbackScope: this,

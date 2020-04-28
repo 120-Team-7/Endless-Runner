@@ -54,10 +54,11 @@ var groundScroll = 5;
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
 var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
+var spawnTime = 3000;
 
 // Obstacle settings
 var logAngularVelocity = 540;
-var logDespawnTime = 20000;
+var logDespawnTime = 10000;
 var logPreventInfiniteTime = 10000;
 
 // Game objects
@@ -102,7 +103,7 @@ var slowmoTime = 5000;
 var slowRate = 0.005; // change in physics times scale every frame
 
 // Player pyschic throw
-var preThrowDrag = 150;
+var preThrowDrag = 100;
 var preThrowMinSpeed = 100;
 var minThrowSpeed = 200;
 var maxThrowSpeed = 600;
