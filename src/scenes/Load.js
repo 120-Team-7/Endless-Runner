@@ -4,7 +4,7 @@ class Load extends Phaser.Scene {
     }
 
     preload() {
-        // load assets
+        // Load image assets
         this.load.image('cloud', './assets/bigCloud.png');
         this.load.image('player', './assets/chara1.png');
         this.load.image('ground', './assets/ground.png');
@@ -13,6 +13,8 @@ class Load extends Phaser.Scene {
         this.load.image('log', './assets/log.png');
         this.load.image('psychicParticle', './assets/psychicParticle.png');
         this.load.image('psychicParticlePointer', './assets/psychicParticlePointer.png');
+        // Load audio assets
+        this.load.audio('song', './assets/bgm.wav');
     }
 
     create() {
