@@ -46,6 +46,7 @@ class Play extends Phaser.Scene {
         // Add scrolling background
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
+        cloud = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'cloud').setOrigin(0,0);
 
         // Create player
         player = this.physics.add.sprite(0, 100, 'player').setOrigin(0.5, 0.5);
@@ -266,5 +267,6 @@ class Play extends Phaser.Scene {
         // Slows by 0.33 at 100% time slow and 0 at 0%
         background.tilePositionX += backgroundScroll - (0.33)*backgroundScroll*(this.percentSlow/100);
         ground.tilePositionX += groundScroll - (0.33)*groundScroll*(this.percentSlow/100);
+        cloud.tilePositionX += cloudScroll - (0.33)*cloudScroll*(this.percentSlow/100);
     }
 }

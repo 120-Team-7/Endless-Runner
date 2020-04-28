@@ -5,6 +5,7 @@ class Load extends Phaser.Scene {
 
     preload() {
         // load assets
+        this.load.image('cloud', './assets/bigCloud.png');
         this.load.image('player', './assets/chara1.png');
         this.load.image('ground', './assets/ground.png');
         this.load.image('invisibleGround', './assets/invisibleGround.png');

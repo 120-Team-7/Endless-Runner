@@ -51,6 +51,7 @@ var highScore = 0;
 var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
+var cloudScroll = 1;
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
 var difficultyLevelMax = 3;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
@@ -66,6 +67,7 @@ var logPreventInfiniteTime = 10000;
 // Game objects
 var background;
 var ground;
+var cloud;
 var platform;
 var player = null;
 var pointer;
