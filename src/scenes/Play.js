@@ -43,6 +43,16 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 0
         }
+
+        //bgm
+        this.bgm = this.sound.add('song', { 
+            mute: false,
+            volume: 1,
+            rate: 1,
+            loop: true 
+        });
+        this.bgm.play();
+
         // Add scrolling background
         background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'ground').setOrigin(0,0);
@@ -252,11 +262,14 @@ class Play extends Phaser.Scene {
             if (this.percentSlow % 10 == 0){
                 this.timeSlowNum.setText(this.percentSlow);
             }
+        } else {
+            this.bgm.stop();
         }
 
         // Return to menu input
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.start('menuScene');
+            this.bgm.stop();
         }
 
         // Update particle emit zone for pointer
