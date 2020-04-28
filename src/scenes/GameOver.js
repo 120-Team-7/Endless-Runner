@@ -58,7 +58,7 @@ class GameOver extends Phaser.Scene {
 
         // Add text
         this.add.text(centerX, centerY - textSpacer, 'You ran ' + currTime + ' meters of the Psychic Trials!', gameOverConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'Press enter to restart', gameOverConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'Press enter to return to menu', gameOverConfig).setOrigin(0.5);
         gameOverConfig.color = '#FF00FF';
         if(currTime > highScore){
             highScore = currTime;
@@ -75,9 +75,10 @@ class GameOver extends Phaser.Scene {
     }
 
     update() {
-        // wait for space input to restart game
+        // Input to return to menu
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
-            this.scene.start('playScene');
+            resetAudio = true;
+            this.scene.start('menuScene');
         }
     }
 }

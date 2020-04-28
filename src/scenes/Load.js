@@ -18,6 +18,12 @@ class Load extends Phaser.Scene {
     }
 
     create() {
+        bgm = game.sound.add('song', { 
+            mute: false,
+            volume: globalVolume,
+            rate: 1,
+            loop: true 
+        });
         // // check for local storage browser support
         // if(window.localStorage) {
         //     console.log('Local storage supported');

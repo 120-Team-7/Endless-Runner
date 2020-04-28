@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         keyJump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         keySlowmo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+        keyMute = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
 
         isGameOver = false;
         timeSlowLock = false;
@@ -44,14 +45,8 @@ class Play extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        //bgm
-        this.bgm = this.sound.add('song', { 
-            mute: false,
-            volume: 1,
-            rate: 1,
-            loop: true 
-        });
-        this.bgm.play();
+        // Audio ---------------------------------------------------------------------------------
+        
 
         // Add scrolling background
         background = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'background').setOrigin(0,0);
@@ -72,7 +67,7 @@ class Play extends Phaser.Scene {
         platform.create(gameWidth - 100, 415, 'invisibleGround').setOrigin(0.5);
         this.physics.add.collider(player, platform);
 
-        // HUD boxes
+        // HUD boxes ---------------------------------------------------------------------------------
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, difficultY, 340, 70, 0x808080).setOrigin(0.5,0.5);
@@ -125,7 +120,7 @@ class Play extends Phaser.Scene {
             repeat: difficultyLevelMax
         });
 
-        // Add particles
+        // Add particles ---------------------------------------------------------------------------------
         this.pointerParticles = this.add.particles('psychicParticlePointer');
         this.pointerParticles.setDepth(15);
         logParticles = this.add.particles('psychicParticle');
@@ -222,7 +217,11 @@ class Play extends Phaser.Scene {
                 });
                 // Increase timescale until reach slowedTimeScale
                 if(this.physics.world.timeScale < slowedTimeScale){
-                    this.physics.world.timeScale += slowRate; 
+                    this.physics.world.timeScale += slowRate;
+                    if(game.sound.rate > slowedSoundRate) { game.sound.rate -= soundRateChange; } else {
+                        game.sound.rate = slowedSoundRate;
+                        console.log(game.sound.rate);
+                    }
                 } else {
                     this.physics.world.timeScale = slowedTimeScale;
                 }
@@ -235,7 +234,11 @@ class Play extends Phaser.Scene {
                 });
                 // After slowmoTime is up, decrease timescale until reach normTimeScale
                 if(this.physics.world.timeScale > normTimeScale){
-                    this.physics.world.timeScale -= slowRate; 
+                    this.physics.world.timeScale -= slowRate;
+                    if(game.sound.rate < normalSoundRate) { game.sound.rate += soundRateChange; } else{
+                        game.sound.rate = normalSoundRate;
+                        console.log(game.sound.rate);
+                    }
                 } else {
                     this.physics.world.timeScale = normTimeScale;
                 }
@@ -262,14 +265,25 @@ class Play extends Phaser.Scene {
                 this.timeSlowNum.setText(this.percentSlow);
             }
         } else {
-            this.bgm.stop();
+            bgm.stop();
         }
 
         // Return to menu input
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
-            this.scene.start('menuScene');
-            this.bgm.stop();
+            isPaused = true;
+            this.scene.pause('playScene');
+            this.scene.setVisible(false, 'playScene');
+            this.scene.run('menuScene');
         }
+
+        // // Mute all sounds
+        // if (Phaser.Input.Keyboard.JustDown(keyMute)) {
+        //     if(game.sound.mute == false){
+        //         game.sound.mute = true;
+        //     } else {
+        //         game.sound.mute = false;
+        //     }
+        // }
 
         // Update particle emit zone for pointer
         pointer = this.input.activePointer;

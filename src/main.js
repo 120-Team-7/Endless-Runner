@@ -24,8 +24,18 @@ let config = {
 // uncomment the following line if you need to purge local storage data
 //localStorage.clear();
 
-// define game
+// Define game
 let game = new Phaser.Game(config);
+
+// Audio Settings
+var globalVolume = 1;
+var slowedSoundRate = 0.75;
+var normalSoundRate = 1;
+var soundRateChange = 0.0026;
+var volumeChange = 0.1;
+
+// Audio
+var bgm;
 
 // Game measurements & text placement
 var gameWidth = game.config.width;
@@ -46,6 +56,8 @@ var psychicThrowDuring = '#FF00FF'; // Magenta
 
 // Game globals
 var isGameOver = false;
+var resetAudio = true;
+var isPaused = false;
 var sceneClock;
 var highScore = 0;
 var currTime = 0;               // Track this round's time
@@ -115,6 +127,5 @@ var maxThrowSpeed = 600;
 var psychicThrowTime = 500;
 
 // Game controls
-var keyLeft, keyRight, keyJump, keySlowmo, keyStart;
-
-var graphics
+var keyLeft, keyRight, keyJump, keySlowmo, keyStart, keyMute, keyVolumeUp, keyVolumeDown;
+var cursors;
