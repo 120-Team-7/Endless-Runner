@@ -12,7 +12,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            // debug: true,
             gravity: {
                 y: gravityY
             }
@@ -58,6 +58,7 @@ var thisDifficultyLevel = 1;
 // Obstacle settings
 var logAngularVelocity = 540;
 var logDespawnTime = 20000;
+var logPreventInfiniteTime = 10000;
 
 // Game objects
 var background;
@@ -66,7 +67,9 @@ var platform;
 var player = null;
 var pointer;
 var pointerCircle;
+var particleLine;
 var particlePointer;
+var particleVector;
 var logParticles;
 var playHUDBox;
 

@@ -2,17 +2,16 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
     constructor(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce) {
         let groupConfig = {
             runChildUpdate: true,
-            maxSize: 5
+            maxSize: 10
         }
         super(scene, null, groupConfig);
         // bounce on ground
         scene.physics.add.collider(this, platform);
         // collide with the player
-        if(!isHit){
-            scene.physics.add.overlap(player, this, this.playerHit, null, scene);
-        }
+        scene.physics.add.overlap(player, this, this.playerHit, null, scene);
         // Add particles
         logParticles = scene.add.particles('psychicParticle');
+        logParticles.setDepth(10);
         // Spawn timer
         scene.timer = scene.time.addEvent({
             delay: Phaser.Math.Between(delayMin, delayMax), 
@@ -36,17 +35,19 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
         // this.scene.timer.getProgress()
     }
 
-    playerHit(){
-        // Camera effects
-        this.cameras.main.flash(1000);
-        this.cameras.main.shake(500, 0.01);
-        // Update variables
-        isGameOver = true;
-        isHit = true;
-        sceneClock.paused = true;
-        player.body.setDragX(groundDrag);
-        // Delay change to game over scene
-        this.time.delayedCall(3000, () => {
-            this.scene.start('gameOverScene') })
+    playerHit() {
+        if(!isHit){
+            // Update variables
+            isGameOver = true;
+            isHit = true;
+            sceneClock.paused = true;
+            player.body.setDragX(groundDrag);
+            // Camera effects
+            this.cameras.main.flash(1000);
+            this.cameras.main.shake(500, 0.01);
+            player.setAlpha(0);
+            // Delay change to game over scene
+            this.time.delayedCall(3000, () => { this.scene.start('gameOverScene') })
+        }
     }
 }

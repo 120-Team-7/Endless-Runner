@@ -14,6 +14,7 @@ class Play extends Phaser.Scene {
         timeSlowLock = false;
         cooldownCalled = false;
         isJumping = false;
+        isHit = false;
 
         let playConfig = {
             fontFamily: 'Courier',
@@ -111,20 +112,35 @@ class Play extends Phaser.Scene {
             repeat: difficultyLevelMax
         });
 
-         // Add particles
-         this.pointerParticles = this.add.particles('psychicParticlePointer');
-         // Particles for pointer
-         pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
-         particlePointer = this.pointerParticles.createEmitter({
-             emitZone: { source: pointerCircle},
-             alpha: { start: 1, end: 0},
-             scale: { start: 1, end: 0},
-             speed: {min: 0, max: 20},
-             lifespan: 4000,
-             frequency: 10000,
-             quantity: 10,
-         });
-         particlePointer.stop();
+        // Add particles
+        this.pointerParticles = this.add.particles('psychicParticlePointer');
+        this.pointerParticles.setDepth(15);
+        // Initialize emit zones
+        pointerCircle = new Phaser.Geom.Circle(0, 0, 5);
+        particleLine = new Phaser.Geom.Line(-200, -200, gameWidth, gameHeight);
+        // Particles to show psychic throw velocity vector
+        particleVector = this.pointerParticles.createEmitter({
+            emitZone: { source: particleLine },
+            alpha: { start: 1, end: 0 },
+            scale: { start: 0.75, end: 0 },
+            speed: {min: 0, max: 10},
+            lifespan: { min: 500, max: 1000 },
+            frequency: 20,
+            quantity: 2,
+        });
+        // Particles on initial click
+        particlePointer = this.pointerParticles.createEmitter({
+            emitZone: { source: pointerCircle},
+            alpha: { start: 1, end: 0 },
+            scale: { start: 1.5, end: 0 },
+            speed: { min: 0, max: 20 },
+            lifespan: { min: 3000, max: 4000 },
+            frequency: 10000,
+            quantity: 10,
+        });
+        particleVector.stop();
+        particlePointer.stop();
+        
     }
 
     update() {

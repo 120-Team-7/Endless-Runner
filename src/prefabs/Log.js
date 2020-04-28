@@ -28,7 +28,10 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
         /*
         Psychic Throw
-        Log is slowed on initial click and while holding click down. Log's velocity is set based on the vector formed by the distance between the pointer position on first clicking the log and the pointer position after releasing click. After releasing click, the log's velocity is set and it continues parallel to this vector for a short moment without gravity before gravity is returned. 
+        Log is slowed on initial click and while holding click down. Log's velocity is set based on the
+        vector formed by the distance between the pointer position on first clicking the log and the pointer
+        position after releasing click. After releasing click, the log's velocity is set and it continues
+        parallel to this vector for a short moment without gravity before gravity is returned. 
         */
         scene.input.setDraggable(this);
         scene.input.on('dragstart', function (pointer, gameObject,) {
@@ -43,30 +46,36 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         });
         
         scene.input.on('dragend', function (pointer, gameObject) {
-            // Particle burst at pointer to show this pointer position (end)
-            particlePointer.start();
             // No grav for now
             gameObject.body.allowGravity = false;
             // Reset drag
             gameObject.body.setDrag(0, 0);
-
             // Calculate measurements
             this.xDist = pointer.x - this.initPointerX;
             this.yDist = pointer.y - this.initPointerY;
             this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
+            // Set particleLine
+            particleLine.setTo(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
 
+            // Rare case where log disappears from trying to divide by 0
+            if(this.totalDist == 0){
+                this.throwVelocityY = -minThrowSpeed;
             // Set velocity magnitude to minDragSpeed if drag distance is shorter than min
-            if(this.totalDist < minThrowSpeed){
+            } else if(this.totalDist < minThrowSpeed){
                 // Converts the xDist, yDist components into xSpeed, ySpeed components in order to achieve minThrowSpeed (diagonal speed) on combining components. Uses Pythagorean theorum to solve for scaleFactor given a, b, and c where c is minThrowSpeed and a, b are xDist, yDist
                 this.minScaleFactor = Math.sqrt(Math.pow(Math.abs(this.xDist), 2) + Math.pow(Math.abs(this.yDist), 2)) / minThrowSpeed;
                 // Converts distance components into velocity components that total to minThrowSpeed
                 this.throwVelocityX = this.xDist / this.minScaleFactor;       
                 this.throwVelocityY = this.yDist / this.minScaleFactor;
+                // Match particleLine to minThrowSpeed
+                Phaser.Geom.Line.Extend(particleLine, 0, minThrowSpeed - this.totalDist);
             // Set velocity magnitude to maxThrowSpeed if drag distance is longer than max
             } else if (this.totalDist > maxThrowSpeed) {
                 this.maxScaleFactor = Math.sqrt(Math.pow(Math.abs(this.xDist), 2) + Math.pow(Math.abs(this.yDist), 2)) / maxThrowSpeed;
                 this.throwVelocityX = this.xDist / this.maxScaleFactor;       
                 this.throwVelocityY = this.yDist / this.maxScaleFactor;
+                // Match particleLine to maxThrowSpeed
+                Phaser.Geom.Line.Extend(particleLine, 0, -(this.totalDist - maxThrowSpeed));
             // Set velocity magnitude to drag distance if between minThrowSpeed and maxThrowSpeed
             } else {
                 this.throwVelocityX = this.xDist;       
@@ -76,21 +85,29 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             gameObject.body.velocity.x = this.throwVelocityX;
             gameObject.body.velocity.y = this.throwVelocityY;
 
+            // Create paticleVector that matches and parallels the psychic throw vector
+            particleVector.start();
+            
             // Return gravity after short duration
             this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {
                 gameObject.body.allowGravity = true;
                 log.particleTrail.stop();
+                particleVector.stop();
                 particlePointer.stop();
             }, null, scene);
         });
 
-        // Despawn after time to prevent player tossing logs up forever
-        this.despawnTime = scene.time.delayedCall(logDespawnTime, () => {
-            log.particleTrail.remove();
-            this.group.remove(this, true, true);
+        // Despawn after certain time to prevent player tossing logs up forever
+        this.infinitePrevent = scene.time.delayedCall(logPreventInfiniteTime, () => {
+            log.particleTrail.start();
+            scene.input.setDraggable(this, false);
+            this.body.velocity.y = 0;
+            this.body.velocity.x = -400;
+            this.setAlpha(0.5);
         }, null, scene);
 
         this.group = group;
+        this.scene = scene;
     }
 
     update() {
@@ -111,11 +128,12 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.body.velocity.x = -this.body.velocity.x;
             this.x = gameWidth;
         }
-        // Remove log from group & scene when off left screen
-        if(this.x < -500) {
-            this.exists = false;
-            this.particleTrail.remove();
-            this.group.remove(this, true, true);
+        // Countdown remove log from group & scene when off left screen
+        if(this.x < 0) {
+            this.despawnTime = this.scene.time.delayedCall(logDespawnTime, () => {
+                this.particleTrail.remove();
+                this.group.remove(this, true, true);
+            }, null, this.scene);
         }
     }
 }
