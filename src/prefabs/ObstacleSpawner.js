@@ -28,15 +28,6 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
             loop: true,
         });
 
-        // scene.test = scene.time.addEvent({
-        //     delay: 1000, 
-        //     callback: () => {
-        //         console.log(scene.timer.getProgress() + " delay: " + scene.timer.delay)
-        //     }, 
-        //     callbackContext: scene,
-        //     loop: true,
-        // });
-
         this.scene = scene;
     }
 

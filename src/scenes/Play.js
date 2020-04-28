@@ -90,10 +90,22 @@ class Play extends Phaser.Scene {
             delay: nextDifficultyLevel,
             callback: () => {
                 thisDifficultyLevel++;
+                if(!isDuringSlow){
+                    normalSoundRate += 0.5;
+                    game.sound.rate = normalSoundRate;
+                }
                 if(spawnTime != spawnTimeMin){
                     spawnTime -= 500;
                 }
+                this.difficultText.setStyle({
+                    color: timeSlowDuring
+                });
                 this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
+                this.colorChange = this.time.delayedCall(3000, () => {
+                        this.difficultText.setStyle({
+                            color: '#000000'
+                        })
+                    },this);
             },
             callbackScope: this,
             repeat: difficultyLevelMax
@@ -219,6 +231,7 @@ class Play extends Phaser.Scene {
             using time slow again. 
             */
             if(timeSlowLock == false && Phaser.Input.Keyboard.DownDuration(keySlowmo, slowmoTime)) {
+                isDuringSlow = true;
                 // Show time slow being used
                 this.timeSlowText.setStyle({
                     color: timeSlowDuring
@@ -240,9 +253,11 @@ class Play extends Phaser.Scene {
             } else if(this.physics.world.timeScale != normTimeScale) {
                 // Prevent player from using again until cooldown
                 timeSlowLock = true;
-                this.timeSlowText.setStyle({
-                    color: timeSlowNotReady
-                });
+                if(!cooldownCalled){
+                    this.timeSlowText.setStyle({
+                        color: timeSlowNotReady
+                    });
+                }
                 // After slowmoTime is up, decrease timescale until reach normTimeScale
                 if(this.physics.world.timeScale > normTimeScale){
                     this.physics.world.timeScale -= slowRate;
@@ -255,6 +270,7 @@ class Play extends Phaser.Scene {
                     }
                 } else {
                     this.physics.world.timeScale = normTimeScale;
+                    isDuringSlow = false;
                 }
             }
             // Start cooldown when conditions are met
@@ -289,15 +305,6 @@ class Play extends Phaser.Scene {
             this.scene.setVisible(false, 'playScene');
             this.scene.run('menuScene');
         }
-
-        // // Mute all sounds
-        // if (Phaser.Input.Keyboard.JustDown(keyMute)) {
-        //     if(game.sound.mute == false){
-        //         game.sound.mute = true;
-        //     } else {
-        //         game.sound.mute = false;
-        //     }
-        // }
 
         // Update particle emit zone for pointer
         pointer = this.input.activePointer;

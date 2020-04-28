@@ -11,7 +11,7 @@ class Menu extends Phaser.Scene {
 
 
         if(resetAudio == true){
-            // bgm.play();
+            bgm.play();
             resetAudio = false;
         }
 

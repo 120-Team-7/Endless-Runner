@@ -30,7 +30,8 @@ let game = new Phaser.Game(config);
 // Audio Settings
 var globalVolume = 1;
 var normalSoundRate = 1;
-var slowedSoundRate = normalSoundRate - 0.75*normalSoundRate;
+var slowedSoundRate = normalSoundRate - 0.5*normalSoundRate;
+var soundRateDifficultBump = 0.5;
 var soundRateChange = 0.0026;
 var volumeChange = 0.1;
 
@@ -97,6 +98,7 @@ var isJumping = false;
 var isGrounded = false;
 var timeSlowLock = false;
 var cooldownCalled = false;
+var isDuringSlow = false;
 var timeSlowCooldown = 3000;
 var isHit = false;
 
@@ -120,7 +122,7 @@ var normTimeScale = 0.75;
 var slowedTimeScale = 1.5;
 var slowmoTime = 5000;
 var slowRate = 0.005; // change in physics times scale every frame
-var filterMax = 0.5;
+var filterMax = 0.4;
 var filterChange = 0.005;
 
 // Player pyschic throw
