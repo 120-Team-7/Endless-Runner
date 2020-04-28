@@ -22,15 +22,15 @@ let config = {
 }
 
 // uncomment the following line if you need to purge local storage data
-//localStorage.clear();
+// localStorage.clear();
 
 // Define game
 let game = new Phaser.Game(config);
 
 // Audio Settings
 var globalVolume = 1;
-var slowedSoundRate = 0.75;
 var normalSoundRate = 1;
+var slowedSoundRate = normalSoundRate - 0.75*normalSoundRate;
 var soundRateChange = 0.0026;
 var volumeChange = 0.1;
 
@@ -90,6 +90,7 @@ var particlePointer;
 var particleVector;
 var logParticles;
 var playHUDBox;
+var timeSlowFilter;
 
 // Player statuses
 var isJumping = false;
@@ -103,21 +104,24 @@ var isHit = false;
 var maxVelocityX = 400;
 var maxVelocityY = 1000;
 var playerRunAccel = 100;
-var groundDrag = 500;
+var groundDrag = 600;
 
 // Player jump movemment
-var holdJumpTime = 150;
-var playerJumpSpeed = -32;
-var playerInitSpeed = -300;
+var holdJumpTime = 180;
+var playerJumpSpeed = -50;
+var playerInitSpeed = -500;
+var playerGravity = 1000;
 
-var playerAirAccel = 15;
+var playerAirAccel = 40;
 var airDrag = 100;
 
 // Player time slow
 var normTimeScale = 0.75;
-var slowedTimeScale = 1.25;
+var slowedTimeScale = 1.5;
 var slowmoTime = 5000;
 var slowRate = 0.005; // change in physics times scale every frame
+var filterMax = 0.5;
+var filterChange = 0.005;
 
 // Player pyschic throw
 var preThrowDrag = 100;

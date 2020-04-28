@@ -53,13 +53,17 @@ class Play extends Phaser.Scene {
         ground = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'ground').setOrigin(0,0);
         cloud = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'cloud').setOrigin(0,0);
 
+        background.setDepth(-10);
+        ground.setDepth(-10);
+        cloud.setDepth(-10);
+
         // Create player
         player = this.physics.add.sprite(50, centerY + 50, 'player').setOrigin(0.5, 0.5);
         player.body.setSize(30, 105);
         player.body.setOffset(30, 25);
         player.setCollideWorldBounds(true);
-        player.setMaxVelocity(maxVelocityX, maxVelocityY);
-        player.setDepth(5);
+        player.body.setMaxVelocity(maxVelocityX, maxVelocityY);
+        player.body.setGravityY(playerGravity);
         this.physics.world.timeScale = normTimeScale;
         
         // Ground platform
@@ -67,11 +71,34 @@ class Play extends Phaser.Scene {
         platform.create(gameWidth - 100, 415, 'invisibleGround').setOrigin(0.5);
         this.physics.add.collider(player, platform);
 
+        // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
+        this.spawner1 = new ObstacleSpawner(this, spawnTime, spawnTime + 1000, -150, -300, 0, 400, 1);
+
+        // Time slow filter
+        timeSlowFilter = this.add.image(0, 0, 'timeSlowFilter').setOrigin(0,0);
+        timeSlowFilter.alpha = 0;
+
         // HUD boxes ---------------------------------------------------------------------------------
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
+        // Difficulty level text
         this.add.rectangle(centerX, difficultY, 340, 70, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, difficultY, 320, 50, 0xC0C0C0).setOrigin(0.5,0.5);
+        thisDifficultyLevel = 1;
+        this.difficultText = this.add.text(centerX, difficultY, 'Difficulty: ' + thisDifficultyLevel, difficultyConfig).setOrigin(0.5, 0.5);
+        this.difficultyTimer = this.time.addEvent({
+            delay: nextDifficultyLevel,
+            callback: () => {
+                thisDifficultyLevel++;
+                if(spawnTime != spawnTimeMin){
+                    spawnTime -= 500;
+                }
+                this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
+            },
+            callbackScope: this,
+            repeat: difficultyLevelMax
+        });
+        
 
         // Current time/distance ran text
         this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
@@ -100,25 +127,6 @@ class Play extends Phaser.Scene {
         });
         playConfig.fixedWidth = 100;
         this.timeSlowNum = this.add.text(centerX + 130, playHUDY, '', playConfig).setOrigin(0.5, 0.5);
-
-        // ObstacleSpawner(scene, delayMin, delayMax, minX, maxX, minY, maxY, logBounce)
-        this.spawner1 = new ObstacleSpawner(this, spawnTime, spawnTime + 1000, -150, -300, 0, 400, 1);
-
-        // Difficulty level text
-        thisDifficultyLevel = 1;
-        this.difficultText = this.add.text(centerX, difficultY, 'Difficulty: ' + thisDifficultyLevel, difficultyConfig).setOrigin(0.5, 0.5);
-        this.difficultyTimer = this.time.addEvent({
-            delay: nextDifficultyLevel,
-            callback: () => {
-                thisDifficultyLevel++;
-                if(spawnTime != spawnTimeMin){
-                    spawnTime -= 500;
-                }
-                this.difficultText.setText("Difficulty: " + thisDifficultyLevel, difficultyConfig);
-            },
-            callbackScope: this,
-            repeat: difficultyLevelMax
-        });
 
         // Add particles ---------------------------------------------------------------------------------
         this.pointerParticles = this.add.particles('psychicParticlePointer');
@@ -222,6 +230,9 @@ class Play extends Phaser.Scene {
                     if(game.sound.rate > slowedSoundRate) { game.sound.rate -= soundRateChange; } else {
                         game.sound.rate = slowedSoundRate;
                     }
+                    if(timeSlowFilter.alpha < filterMax) { timeSlowFilter.alpha += filterChange; } else {
+                        timeSlowFilter.alpha = filterMax;
+                    }
                 } else {
                     this.physics.world.timeScale = slowedTimeScale;
                 }
@@ -238,6 +249,9 @@ class Play extends Phaser.Scene {
                     // Speed up global sound rate
                     if(game.sound.rate < normalSoundRate) { game.sound.rate += soundRateChange; } else{
                         game.sound.rate = normalSoundRate;
+                    }
+                    if(timeSlowFilter.alpha > 0) { timeSlowFilter.alpha -= filterChange; } else {
+                        timeSlowFilter.alpha = 0;
                     }
                 } else {
                     this.physics.world.timeScale = normTimeScale;
@@ -260,7 +274,7 @@ class Play extends Phaser.Scene {
 
             // Update time slow text
             // Based on percentage of time slow with 0 being normal and 100 being max time slow
-            this.percentSlow = Math.round(200*(this.physics.world.timeScale-normTimeScale));
+            this.percentSlow = Math.round(140*(this.physics.world.timeScale-normTimeScale));
             if (this.percentSlow % 10 == 0){
                 this.timeSlowNum.setText(this.percentSlow);
             }
@@ -291,8 +305,8 @@ class Play extends Phaser.Scene {
 
         // Scroll background and ground and modify based on time slow
         // Slows by 0.33 at 100% time slow and 0 at 0%
-        background.tilePositionX += backgroundScroll - (0.33)*backgroundScroll*(this.percentSlow/100);
-        ground.tilePositionX += groundScroll - (0.33)*groundScroll*(this.percentSlow/100);
-        cloud.tilePositionX += cloudScroll - (0.33)*cloudScroll*(this.percentSlow/100);
+        background.tilePositionX += backgroundScroll - (0.5)*backgroundScroll*(this.percentSlow/100);
+        ground.tilePositionX += groundScroll - (0.5)*groundScroll*(this.percentSlow/100);
+        cloud.tilePositionX += cloudScroll - (0.5)*cloudScroll*(this.percentSlow/100);
     }
 }

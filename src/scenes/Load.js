@@ -13,6 +13,7 @@ class Load extends Phaser.Scene {
         this.load.image('log', './assets/log.png');
         this.load.image('psychicParticle', './assets/psychicParticle.png');
         this.load.image('psychicParticlePointer', './assets/psychicParticlePointer.png');
+        this.load.image('timeSlowFilter', './assets/TimeSlowFilter.png');
         // Load audio assets
         this.load.audio('song', './assets/bgm.wav');
     }

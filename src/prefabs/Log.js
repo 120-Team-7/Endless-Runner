@@ -10,6 +10,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityX(velocityX);
         this.setVelocityY(velocityY);
         this.setBounceY(logBounce);
+        this.setDepth(-1);
 
         let log = this;
         this.exists = true;
@@ -129,9 +130,9 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.body.setDrag(0, 0);
         }
         // Reflect log back left if log goes off right screen
-        if(this.x > gameWidth + 100 && this.beenThrown) {
-            this.body.velocity.x = -this.body.velocity.x;
-            this.x = gameWidth;
+        if(this.x > gameWidth + 50 && this.beenThrown) {
+            this.body.velocity.x = -this.body.velocity.x/4;
+            this.x = gameWidth + 25;
         }
         // Countdown remove log from group & scene when off left screen
         if(this.x < 0) {
