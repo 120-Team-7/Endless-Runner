@@ -45,6 +45,7 @@ class Menu extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             this.scene.setVisible(false, 'menuScene');
             this.scene.setVisible(true, 'playScene');
+            this.sound.play('buttonsound');
             this.scene.run('playScene');
         }
         if (Phaser.Input.Keyboard.JustDown(keyVolumeDown)) {

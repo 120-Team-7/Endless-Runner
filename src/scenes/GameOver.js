@@ -80,6 +80,7 @@ class GameOver extends Phaser.Scene {
         // Input to return to menu
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             resetAudio = true;
+            this.sound.play('buttonsound');
             this.scene.start('menuScene');
         }
     }

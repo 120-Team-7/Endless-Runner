@@ -18,6 +18,7 @@ class Load extends Phaser.Scene {
         this.load.audio('song', './assets/bgm.wav');
         this.load.audio('grunt', './assets/grunt.mp3');
         this.load.audio('death', './assets/death.mp3');
+        this.load.audio('buttonsound', './assets/buttonsound.mp3');
     }
 
     create() {
@@ -47,6 +48,7 @@ class Load extends Phaser.Scene {
     update() {
         // Go to menu scene
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
+            this.sound.play('buttonsound');
             this.scene.start('menuScene');
         }
     }

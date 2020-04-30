@@ -304,6 +304,7 @@ class Play extends Phaser.Scene {
             isPaused = true;
             this.scene.pause('playScene');
             this.scene.setVisible(false, 'playScene');
+            this.sound.play('buttonsound');
             this.scene.run('menuScene');
         }
 
