@@ -45,8 +45,13 @@ class Play extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        // Audio ---------------------------------------------------------------------------------
-        
+        // psychic throw sound
+        grab = this.sound.add('grab', {
+            mute: false,
+            volume: globalVolume,
+            rate: 1,
+            loop: true 
+        });
 
         // Add scrolling background
         background = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'background').setOrigin(0,0);

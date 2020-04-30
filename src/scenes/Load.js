@@ -19,6 +19,7 @@ class Load extends Phaser.Scene {
         this.load.audio('grunt', './assets/grunt.mp3');
         this.load.audio('death', './assets/death.mp3');
         this.load.audio('buttonsound', './assets/buttonsound.mp3');
+        this.load.audio('grab', './assets/grab.mp3');
     }
 
     create() {
