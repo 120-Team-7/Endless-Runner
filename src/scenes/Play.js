@@ -45,14 +45,6 @@ class Play extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        // psychic throw sound
-        grab = this.sound.add('grab', {
-            mute: false,
-            volume: globalVolume,
-            rate: 1,
-            loop: true 
-        });
-
         // Add scrolling background
         background = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'background').setOrigin(0,0);
         ground = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'ground').setOrigin(0,0);
@@ -95,10 +87,11 @@ class Play extends Phaser.Scene {
             delay: nextDifficultyLevel,
             callback: () => {
                 thisDifficultyLevel++;
-                if(!isDuringSlow){
-                    normalSoundRate += 0.5;
-                    game.sound.rate = normalSoundRate;
-                }
+                // Sound rate increase on higher difficulty
+                // if(!isDuringSlow){
+                //     normalSoundRate += 0.5;
+                //     game.sound.rate = normalSoundRate;
+                // }
                 if(spawnTime != spawnTimeMin){
                     spawnTime -= 500;
                 }
@@ -175,7 +168,6 @@ class Play extends Phaser.Scene {
         });
         particleVector.stop();
         particlePointer.stop();
-        
     }
 
     update() {
@@ -217,7 +209,7 @@ class Play extends Phaser.Scene {
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
-                this.sound.play('grunt');
+                gruntSound.play();
             }
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {

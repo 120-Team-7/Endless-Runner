@@ -4,6 +4,12 @@ class Load extends Phaser.Scene {
     }
 
     preload() {
+        this.loadingText = this.add.text(centerX, centerY, 'LOADING...', {
+            fontFamily: 'Courier',
+            fontSize: '50px',
+            color: '#FF00FF',
+            align: 'center',
+        }).setOrigin(0.5, 0.5);
         // Load image assets
         this.load.image('cloud', './assets/bigCloud.png');
         this.load.image('player', './assets/chara1.png');
@@ -20,17 +26,11 @@ class Load extends Phaser.Scene {
         this.load.audio('death', './assets/death.mp3');
         this.load.audio('buttonsound', './assets/buttonsound.mp3');
         this.load.audio('grab', './assets/grab.mp3');
+        this.load.audio('throw', './assets/throw.mp3');
     }
 
     create() {
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
-
-        this.add.text(centerX, centerY, 'Press ENTER to start', {
-            fontFamily: 'Courier',
-            fontSize: '50px',
-            color: '#FF00FF',
-            align: 'center',
-        }).setOrigin(0.5, 0.5);
 
         bgm = game.sound.add('song', { 
             mute: false,
@@ -39,12 +39,35 @@ class Load extends Phaser.Scene {
             loop: true 
         });
 
-        // check for local storage browser support
-        // if(window.localStorage) {
-        //     console.log('Local storage supported');
-        // } else {
-        //     console.log('Local storage not supported');
-        // }
+        grabSound = game.sound.add('grab', {
+            mute: false,
+            volume: globalVolume/2,
+            rate: 1,
+            loop: true 
+        });
+
+        throwSound = game.sound.add('throw', {
+            mute: false,
+            volume: globalVolume/2,
+            rate: 1,
+            loop: false 
+        });
+
+        gruntSound = game.sound.add('grunt', {
+            mute: false,
+            volume: globalVolume/2,
+            rate: 1,
+            loop: false 
+        });
+
+        this.loadingText.destroy();
+        this.add.text(centerX, centerY, 'Press ENTER to start', {
+            fontFamily: 'Courier',
+            fontSize: '50px',
+            color: '#FF00FF',
+            align: 'center',
+        }).setOrigin(0.5, 0.5);
+
     }
     update() {
         // Go to menu scene

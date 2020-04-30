@@ -37,7 +37,9 @@ var volumeChange = 0.1;
 
 // Audio
 var bgm;
-var grab;
+var grabSound;
+var throwSound;
+var gruntSound;
 
 // Game measurements & text placement
 var gameWidth = game.config.width;

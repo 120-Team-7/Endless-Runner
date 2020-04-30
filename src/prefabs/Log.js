@@ -47,7 +47,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             // Start log trailing particles and burst at pointer to show this pointer position (start)
             this.particleTrail.start();
             particlePointer.start();
-            grab.play();
+            grabSound.play();
         });
         this.on('dragend', function (pointer) {
             // No grav for now
@@ -60,7 +60,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
             // Set particleLine
             particleLine.setTo(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
-            grab.stop();
+            grabSound.stop();
 
             // Rare case where log disappears from trying to divide by 0
             if(this.totalDist == 0){
@@ -92,6 +92,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
             // Create paticleVector that matches and parallels the psychic throw vector
             particleVector.start();
+            throwSound.play();
             
             // Return gravity after short duration
             this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {

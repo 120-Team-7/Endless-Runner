@@ -35,7 +35,7 @@ class Menu extends Phaser.Scene {
         menuConfig.color = '#FFFFFF',
         this.add.text(centerX, centerY - textSpacer, 'A move left   D move right', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY, 'W jump     Hold SHIFT time slow', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + textSpacer, 'Click, drag, release obstacles to use Psychic Throw', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY + textSpacer, 'Click, drag, release incoming logs to use Psychic Throw', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY + 2*textSpacer, 'Press ENTER here to start or return to menu elsewhere', menuConfig).setOrigin(0.5);
         this.volumeText = this.add.text(gameWidth - 170, centerY + 3*textSpacer, 'Game volume: ' + game.sound.volume, menuConfig).setOrigin(0.5);
         this.muteText = this.add.text(150, centerY + 3*textSpacer, 'Muted: ' + game.sound.mute, menuConfig).setOrigin(0.5);
