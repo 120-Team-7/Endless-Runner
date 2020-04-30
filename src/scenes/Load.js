@@ -16,6 +16,8 @@ class Load extends Phaser.Scene {
         this.load.image('timeSlowFilter', './assets/TimeSlowFilter.png');
         // Load audio assets
         this.load.audio('song', './assets/bgm.wav');
+        this.load.audio('grunt', './assets/grunt.mp3');
+        this.load.audio('death', './assets/death.mp3');
     }
 
     create() {

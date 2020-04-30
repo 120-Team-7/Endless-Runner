@@ -212,6 +212,7 @@ class Play extends Phaser.Scene {
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
+                this.sound.play('grunt');
             }
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {

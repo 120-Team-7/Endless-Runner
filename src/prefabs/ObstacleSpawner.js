@@ -49,6 +49,7 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
             this.cameras.main.flash(1000);
             this.cameras.main.shake(500, 0.01);
             player.setAlpha(0);
+            this.sound.play('death');
             // Delay change to game over scene
             this.time.delayedCall(3000, () => { this.scene.start('gameOverScene') })
         }
