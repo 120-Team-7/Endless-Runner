@@ -108,7 +108,7 @@ class Play extends Phaser.Scene {
                 // Sound rate increase on higher difficulty
                 if(!isDuringSlow){
                     normalSoundRate += 0.5;
-                    game.sound.rate = normalSoundRate;
+                    bgm.rate = normalSoundRate;
                 }
                 if(spawnTime != spawnTimeMin){
                     spawnTime -= 500;
@@ -215,7 +215,7 @@ class Play extends Phaser.Scene {
                     player.body.velocity.x += playerAirAccel;
                 }
             }
-            
+
             // Min jump speed
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
