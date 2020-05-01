@@ -47,6 +47,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             // Start log trailing particles and burst at pointer to show this pointer position (start)
             this.particleTrail.start();
             particlePointer.start();
+            // Play grab sound
             grabSound.play();
         });
         this.on('dragend', function (pointer) {
@@ -60,9 +61,11 @@ class Log extends Phaser.Physics.Arcade.Sprite {
             this.totalDist = Phaser.Math.Distance.Between(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
             // Set particleLine
             particleLine.setTo(this.initPointerX, this.initPointerY, pointer.x, pointer.y);
+            // Stop grab sound
             grabSound.stop();
 
-            // Rare case where log disappears from trying to divide by 0
+            // Calculate throw velocity vector
+            // Rare case where log disappears from trying to divide by 0 (mouse dragged a distance of 0)
             if(this.totalDist == 0){
                 this.throwVelocityY = -minThrowSpeed;
             // Set velocity magnitude to minDragSpeed if drag distance is shorter than min
@@ -92,11 +95,13 @@ class Log extends Phaser.Physics.Arcade.Sprite {
 
             // Create paticleVector that matches and parallels the psychic throw vector
             particleVector.start();
+            // Play throw sound
             throwSound.play();
             
             // Return gravity after short duration
             this.gravityReturn = scene.time.delayedCall(psychicThrowTime, () => {
                 this.body.allowGravity = true;
+                // Stop all particles
                 log.particleTrail.stop();
                 particleVector.stop();
                 particlePointer.stop();
@@ -110,7 +115,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
                 log.particleTrail.start();
                 scene.input.setDraggable(this, false);
                 this.body.velocity.y = 0;
-                this.body.velocity.x = -400;
+                this.body.velocity.x = -200;
                 this.setAlpha(0.5);
             }
         }, null, scene);
@@ -120,6 +125,7 @@ class Log extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
+        // Update emit zone circle of this log
         this.emitCircle.setPosition(this.x, this.y);
 
         // Change angular velocity based on moving direction

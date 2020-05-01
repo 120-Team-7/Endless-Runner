@@ -4,6 +4,7 @@ class Load extends Phaser.Scene {
     }
 
     preload() {
+        // Start load text
         this.loadingText = this.add.text(centerX, centerY, 'LOADING...', {
             fontFamily: 'Courier',
             fontSize: '50px',
@@ -32,6 +33,7 @@ class Load extends Phaser.Scene {
     create() {
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
+        // Set some sounds to global variables with configs
         bgm = game.sound.add('song', { 
             mute: false,
             volume: globalVolume,
@@ -60,8 +62,9 @@ class Load extends Phaser.Scene {
             loop: false 
         });
 
+        // End load and prompt player to continue
         this.loadingText.destroy();
-        this.add.text(centerX, centerY, 'Press ENTER to start', {
+        this.add.text(centerX, centerY, 'Press ENTER to continue', {
             fontFamily: 'Courier',
             fontSize: '50px',
             color: '#FF00FF',

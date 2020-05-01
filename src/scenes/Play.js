@@ -4,6 +4,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        // Add inputs to play scene
         keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyJump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -11,12 +12,14 @@ class Play extends Phaser.Scene {
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         keyMute = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
 
+        // Reset some globals to be safe
         isGameOver = false;
         timeSlowLock = false;
         cooldownCalled = false;
         isJumping = false;
         isHit = false;
         spawnTime = spawnTimeMax;
+        this.physics.world.timeScale = normTimeScale;
 
         let playConfig = {
             fontFamily: 'Courier',
@@ -72,12 +75,11 @@ class Play extends Phaser.Scene {
         });
 
         // Create player
-        player = this.physics.add.sprite(0, 100, 'player','run2').play("walk");
+        player = this.physics.add.sprite(300, 350, 'player','run2').play("walk");
         player.body.setSize(30, 105);
         player.setCollideWorldBounds(true);
         player.body.setMaxVelocity(maxVelocityX, maxVelocityY);
         player.body.setGravityY(playerGravity);
-        this.physics.world.timeScale = normTimeScale;
         
         // Ground platform
         platform = this.physics.add.staticGroup();
@@ -104,10 +106,10 @@ class Play extends Phaser.Scene {
             callback: () => {
                 thisDifficultyLevel++;
                 // Sound rate increase on higher difficulty
-                // if(!isDuringSlow){
-                //     normalSoundRate += 0.5;
-                //     game.sound.rate = normalSoundRate;
-                // }
+                if(!isDuringSlow){
+                    normalSoundRate += 0.5;
+                    game.sound.rate = normalSoundRate;
+                }
                 if(spawnTime != spawnTimeMin){
                     spawnTime -= 500;
                 }
@@ -213,15 +215,7 @@ class Play extends Phaser.Scene {
                     player.body.velocity.x += playerAirAccel;
                 }
             }
-
-            // // Flip player sprite based on x velocity
-            // if(player.body.velocity.x > 5) {
-            //     player.flipX = false;
-            // }
-            // if(player.body.velocity.x < -5) {
-            //     player.flipX = true;
-            // }
-    
+            
             // Min jump speed
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
@@ -310,10 +304,11 @@ class Play extends Phaser.Scene {
                 this.timeSlowNum.setText(this.percentSlow);
             }
         } else {
+            // Stop bgm if game over
             bgm.stop();
         }
 
-        // Return to menu input
+        // Pause scene, hide play scene, go to menu scene
         if (Phaser.Input.Keyboard.JustDown(keyStart)) {
             isPaused = true;
             this.scene.pause('playScene');

@@ -28,17 +28,41 @@ class Menu extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-        // add menu screen text
-        this.add.text(centerX, (centerY - textSpacer)/2, 'Psychic Trials', menuConfig).setOrigin(0.5);
+        // Add menu screen text
+        this.add.text(centerX, 80, 'Psychic Trials', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY + 3*textSpacer, 'High score: ' + highScore, menuConfig).setOrigin(0.5);
-        menuConfig.color = '#FFFFFF',
-        this.add.text(centerX, centerY - textSpacer, 'A move left   D move right', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY, 'W jump     Hold SHIFT time slow', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + textSpacer, 'Click, drag, release incoming logs to use Psychic Throw', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY + 2*textSpacer, 'Press ENTER here to start or return to menu elsewhere', menuConfig).setOrigin(0.5);
-        this.volumeText = this.add.text(gameWidth - 170, centerY + 3*textSpacer, 'Game volume: ' + game.sound.volume, menuConfig).setOrigin(0.5);
-        this.muteText = this.add.text(150, centerY + 3*textSpacer, 'Muted: ' + game.sound.mute, menuConfig).setOrigin(0.5);
+        this.add.text(centerX - 120, 160 + 4*textSpacer, 'High score: ' + highScore, menuConfig)
+        
+        
+        this.add.text(50, 160, 'A', menuConfig)
+        menuConfig.color = '#FFFFFF';
+        this.add.text(90, 160, 'move left', menuConfig)
+        menuConfig.color = '#FF00FF';
+        this.add.text(435, 160, 'D', menuConfig)
+        menuConfig.color = '#FFFFFF';
+        this.add.text(475, 160, 'move right', menuConfig)
+        menuConfig.color = '#FF00FF';
+        this.add.text(850, 160, 'W', menuConfig)
+        menuConfig.color = '#FFFFFF';
+        this.add.text(890, 160, 'jump', menuConfig)
+        menuConfig.color = '#FF00FF';
+        this.add.text(50, 160 + textSpacer, 'Hold SHIFT', menuConfig);
+        menuConfig.color = '#FFFFFF';
+        this.add.text(250, 160 + textSpacer, 'time slow', menuConfig);
+        menuConfig.color = '#FF00FF';
+        this.add.text(550, 160 + textSpacer, 'Dodge', menuConfig);
+        menuConfig.color = '#FFFFFF';
+        this.add.text(650, 160 + textSpacer, 'the bouncing logs!', menuConfig);
+        menuConfig.color = '#FF00FF';
+        this.add.text(90, 160 + 2*textSpacer, 'Click, drag, release logs', menuConfig)
+        menuConfig.color = '#FFFFFF';
+        this.add.text(560, 160 + 2*textSpacer, 'to use Psychic Throw', menuConfig)
+        this.add.text(20, 160 + 3*textSpacer, 'Press        here to start or return to menu elsewhere', menuConfig)
+        menuConfig.color = '#FF00FF';
+        this.add.text(135, 160 + 3*textSpacer, 'ENTER', menuConfig)
+        menuConfig.color = '#FFFFFF';
+        this.volumeText = this.add.text(gameWidth - 350, 160 + 4*textSpacer, '↑Game volume↓: ' + game.sound.volume, menuConfig)
+        this.muteText = this.add.text(20, 160 + 4*textSpacer, '(M)uted: ' + game.sound.mute, menuConfig)
     }
 
     update() {
@@ -69,7 +93,7 @@ class Menu extends Phaser.Scene {
                 game.sound.mute = false;
             }
         }
-        this.volumeText.setText('Game volume: ' + Math.round(game.sound.volume * 100));
-        this.muteText.setText('Muted: ' + game.sound.mute);
+        this.volumeText.setText('↑Game volume↓: ' + Math.round(game.sound.volume * 100));
+        this.muteText.setText('(M)uted: ' + game.sound.mute);
     }
 }

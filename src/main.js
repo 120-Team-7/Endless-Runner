@@ -1,6 +1,20 @@
+/*
+Psychic Trials by Evan Li, Hoang Huynh, Henry Nguyen. Date completed: 4/ /20.
+
+Technical creative tilt: Many small and medium sized projects were done in order to learn how some common video game
+mechanics can be implemented. These include a pause menu, ability cooldown idicator, and (somewhat) wave based spawns.
+The psychic throw stands out as the most difficult as it involved many interconnect components. Manipulating geom objects
+used as particle emit zones, calculating and depicting velocity vectors with definied minimum and maximum states, and 
+while maintaining class structure to support more complex behaviors such as the wave spawning were projects brought to life
+through combing through Phaser documents.
+
+Aesthetic creative tilt:
+
+*/
+
 var gravityY = 600;
 
-// define and configure main Phaser game object
+// Define and configure main Phaser game object
 let config = {
     parent: 'myGame',
     type: Phaser.AUTO,
@@ -20,9 +34,6 @@ let config = {
     },
     scene: [ Load, Menu, Play, GameOver ]
 }
-
-// uncomment the following line if you need to purge local storage data
-// localStorage.clear();
 
 // Define game
 let game = new Phaser.Game(config);
