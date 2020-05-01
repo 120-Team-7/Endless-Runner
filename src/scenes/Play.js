@@ -43,10 +43,7 @@ class Play extends Phaser.Scene {
                 right: 10,
             },
             fixedWidth: 0
-        }
-
-        // Audio ---------------------------------------------------------------------------------
-        
+        }        
 
         // Add scrolling background
         background = this.add.tileSprite(0, 0, gameWidth, gameHeight, 'background').setOrigin(0,0);
@@ -69,8 +66,9 @@ class Play extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
-        //create player
-        player = this.physics.add.sprite(0,100, 'player','run2').play('walk');
+
+        // Create player
+        player = this.physics.add.sprite(0, 100, 'player','run2').play("walk");
         player.body.setSize(30, 105);
       
         player.setCollideWorldBounds(true);
@@ -176,6 +174,7 @@ class Play extends Phaser.Scene {
 
         if(!isGameOver){
             if(isGrounded){
+                player.anims.resume();
                 // Ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
@@ -185,7 +184,9 @@ class Play extends Phaser.Scene {
                     // Set drag when not inputting movement 
                     player.body.setDragX(groundDrag);
                 }
+                // player.play('walk', true);
             } else {
+                player.anims.pause();
                 // Air movement
                 // Set drag always when in air, decreased control while in air
                 player.body.setDragX(airDrag);
@@ -196,13 +197,13 @@ class Play extends Phaser.Scene {
                 }
             }
 
-            // Flip player sprite based on x velocity
-            if(player.body.velocity.x > 5) {
-                player.flipX = false;
-            }
-            if(player.body.velocity.x < -5) {
-                player.flipX = true;
-            }
+            // // Flip player sprite based on x velocity
+            // if(player.body.velocity.x > 5) {
+            //     player.flipX = false;
+            // }
+            // if(player.body.velocity.x < -5) {
+            //     player.flipX = true;
+            // }
     
             // Min jump speed
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
