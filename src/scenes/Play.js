@@ -54,10 +54,26 @@ class Play extends Phaser.Scene {
         ground.setDepth(-10);
         cloud.setDepth(-10);
 
+        // Create walking animation
+        this.anims.create({
+            key: 'walk',
+            frames: [
+                { key: 'player',frame:"run2" },
+                { key: 'player',frame:"run3" },
+                { key: 'player',frame:"run4" },
+                { key: 'player',frame:"run5" },
+                { key: 'player',frame:"run6" },
+                { key: 'player',frame:"run7" },
+                { key: 'player',frame:"run8" },
+                { key: 'player',frame:"run9" },
+            ],
+            frameRate: 12,
+            repeat: -1
+        });
+
         // Create player
-        player = this.physics.add.sprite(50, centerY + 50, 'player').setOrigin(0.5, 0.5);
+        player = this.physics.add.sprite(0, 100, 'player','run2').play("walk");
         player.body.setSize(30, 105);
-        player.body.setOffset(30, 25);
         player.setCollideWorldBounds(true);
         player.body.setMaxVelocity(maxVelocityX, maxVelocityY);
         player.body.setGravityY(playerGravity);
@@ -172,11 +188,11 @@ class Play extends Phaser.Scene {
 
     update() {
         this.spawner1.update();
-        // this.physics.world.collide(paddle, this.barrierGroup, this.paddleCollision, null, this);
         isGrounded = player.body.touching.down;
 
         if(!isGameOver){
             if(isGrounded){
+                player.anims.resume();
                 // Ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
@@ -187,6 +203,7 @@ class Play extends Phaser.Scene {
                     player.body.setDragX(groundDrag);
                 }
             } else {
+                player.anims.pause();
                 // Air movement
                 // Set drag always when in air, decreased control while in air
                 player.body.setDragX(airDrag);
@@ -197,13 +214,13 @@ class Play extends Phaser.Scene {
                 }
             }
 
-            // Flip player sprite based on x velocity
-            if(player.body.velocity.x > 5) {
-                player.flipX = false;
-            }
-            if(player.body.velocity.x < -5) {
-                player.flipX = true;
-            }
+            // // Flip player sprite based on x velocity
+            // if(player.body.velocity.x > 5) {
+            //     player.flipX = false;
+            // }
+            // if(player.body.velocity.x < -5) {
+            //     player.flipX = true;
+            // }
     
             // Min jump speed
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
