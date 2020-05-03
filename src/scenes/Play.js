@@ -19,6 +19,7 @@ class Play extends Phaser.Scene {
         isJumping = false;
         isHit = false;
         spawnTime = spawnTimeMax;
+        normalSoundRate = 1;
         this.physics.world.timeScale = normTimeScale;
 
         let playConfig = {
