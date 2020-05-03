@@ -69,8 +69,23 @@ class Play extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+        this.anims.create({
+            key: 'walk2',
+            frames: [
+                { key: 'player',frame:"jump1" },
+                { key: 'player',frame:"jump2" },
+                { key: 'player',frame:"jump3" },
+                { key: 'player',frame:"jump4" },
+                { key: 'player',frame:"jump5" },
+                { key: 'player',frame:"jump6" },
+            ],
+            frameRate: 23,
+            repeat: 0
+        });
         //create player
         player = this.physics.add.sprite(0,100, 'player','run2').play('walk');
+        //player.body.isGrounded() && player.play('walk', true);
+
         player.body.setSize(30, 105);
       
         player.setCollideWorldBounds(true);
@@ -179,8 +194,12 @@ class Play extends Phaser.Scene {
                 // Ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
+                    //player.play('walk');
+                    
                 } else if(keyRight.isDown) {
                     player.body.velocity.x += playerRunAccel;
+                    //player.play('walk');
+                    ;
                 } else {
                     // Set drag when not inputting movement 
                     player.body.setDragX(groundDrag);
@@ -208,10 +227,24 @@ class Play extends Phaser.Scene {
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
+                player.play('walk2');
+                
+                
             }
+            if(Phaser.Input.Keyboard.JustDown(keyRight) && isGrounded && isJumping == false && keyRight.isDown) {
+                player.play('walk');
+            }
+
+            if(Phaser.Input.Keyboard.JustDown(keyLeft) && isGrounded && isJumping == false && keyLeft.isDown) {
+                player.play('walk');
+            }
+            
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {
                 player.body.velocity.y += playerJumpSpeed;
+                player.play('walk2');
+                
+                
             }
             // Let go of up key to jump again
             if(Phaser.Input.Keyboard.JustUp(keyJump)){
