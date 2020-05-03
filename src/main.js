@@ -47,7 +47,7 @@ let game = new Phaser.Game(config);
 var globalVolume = 1;
 var normalSoundRate = 1;
 var slowedSoundRate = normalSoundRate - 0.5*normalSoundRate;
-var soundRateDifficultBump = 0.5;
+var soundRateDifficultBump = 0.25;
 var soundRateChange = 0.0026;
 var volumeChange = 0.1;
 
@@ -84,13 +84,16 @@ var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
 var cloudScroll = 1;
+var logCount;
+
+// Difficulty settings
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
-var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
+var difficultyLevelMax = 2;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
-var spawnTime = 3000;
-var spawnTimeMax = 3000;
-var spawnTimeMin = 2000;
-var count = 1;
+var spawnTimeMax = 4000;
+var spawnTime = spawnTimeMax;
+var spawnTimeMin = 2500;
+var spawnTimeChange = 500;
 
 // Obstacle settings
 var logAngularVelocity = 540;

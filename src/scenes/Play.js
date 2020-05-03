@@ -12,6 +12,8 @@ class Play extends Phaser.Scene {
         keyStart = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         keyMute = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
 
+
+
         // Reset some globals to be safe
         isGameOver = false;
         timeSlowLock = false;
@@ -97,22 +99,24 @@ class Play extends Phaser.Scene {
         // HUD boxes ---------------------------------------------------------------------------------
         this.add.rectangle(centerX, playHUDY, gameWidth, playHUDHeight, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, playHUDY, gameWidth - 20, playHUDHeight - 20, 0xC0C0C0).setOrigin(0.5,0.5);
+
         // Difficulty level text
         this.add.rectangle(centerX, difficultY, 340, 70, 0x808080).setOrigin(0.5,0.5);
         this.add.rectangle(centerX, difficultY, 320, 50, 0xC0C0C0).setOrigin(0.5,0.5);
         thisDifficultyLevel = 1;
         this.difficultText = this.add.text(centerX, difficultY, 'Difficulty: ' + thisDifficultyLevel, difficultyConfig).setOrigin(0.5, 0.5);
+        // Difficulty increase timer
         this.difficultyTimer = this.time.addEvent({
             delay: nextDifficultyLevel,
             callback: () => {
                 thisDifficultyLevel++;
                 // Sound rate increase on higher difficulty
                 if(!isDuringSlow){
-                    normalSoundRate += 0.5;
+                    normalSoundRate += soundRateDifficultBump;
                     bgm.rate = normalSoundRate;
                 }
                 if(spawnTime != spawnTimeMin){
-                    spawnTime -= 500;
+                    spawnTime -= spawnTimeChange;
                 }
                 this.difficultText.setStyle({
                     color: timeSlowDuring
@@ -127,7 +131,6 @@ class Play extends Phaser.Scene {
             callbackScope: this,
             repeat: difficultyLevelMax
         });
-        
 
         // Current time/distance ran text
         this.timeTextTop = this.add.text(centerX/2 - 100, playHUDY - 15, 'Distance: ', playConfig).setOrigin(0.5, 0.5);
