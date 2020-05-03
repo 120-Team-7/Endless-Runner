@@ -1,5 +1,5 @@
 /*
-Psychic Trials by Evan Li, Hoang Huynh, Henry Nguyen. Date completed: 4/ /20.
+Psychic Trials by Evan Li, Hoang Huynh, Henry Nguyen. Date completed: 5/3/20.
 
 Technical creative tilt: Many small and medium sized projects were done in order to learn how some common video game
 mechanics can be implemented. These include a pause menu, ability cooldown idicator, and (somewhat) wave based spawns.

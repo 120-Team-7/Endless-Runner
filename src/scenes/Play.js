@@ -92,8 +92,9 @@ class Play extends Phaser.Scene {
         });
 
         // Create player
-        player = this.physics.add.sprite(300, 350, 'player','run2').play("walk");
-        player.body.setSize(30, 105);
+        player = this.physics.add.sprite(300, 330, 'player','run2')
+        player.body.setSize(30, 80);
+        player.setOffset(20, 20);
         player.setCollideWorldBounds(true);
         player.body.setMaxVelocity(maxVelocityX, maxVelocityY);
         player.body.setGravityY(playerGravity);
@@ -340,7 +341,7 @@ class Play extends Phaser.Scene {
         pointerCircle.setPosition(pointer.worldX, pointer.worldY);
 
         // Scroll background and ground and modify based on time slow
-        // Slows by 0.33 at 100% time slow and 0 at 0%
+        // Slows by 0.5 at 100% time slow and 0 at 0%
         background.tilePositionX += backgroundScroll - (0.5)*backgroundScroll*(this.percentSlow/100);
         ground.tilePositionX += groundScroll - (0.5)*groundScroll*(this.percentSlow/100);
         cloud.tilePositionX += cloudScroll - (0.5)*cloudScroll*(this.percentSlow/100);
