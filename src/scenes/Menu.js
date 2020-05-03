@@ -33,7 +33,6 @@ class Menu extends Phaser.Scene {
         menuConfig.fontSize = '30px';
         this.add.text(centerX - 120, 160 + 4*textSpacer, 'High score: ' + highScore, menuConfig)
         
-        
         this.add.text(50, 160, 'A', menuConfig)
         menuConfig.color = '#FFFFFF';
         this.add.text(90, 160, 'move left', menuConfig)

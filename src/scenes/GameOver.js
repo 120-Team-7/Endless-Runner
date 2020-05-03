@@ -43,7 +43,7 @@ class GameOver extends Phaser.Scene {
         cooldownCalled = false;
         isJumping = false;
         normalSoundRate = 1;
-        game.sound.rate = normalSoundRate;
+        bgm.rate = normalSoundRate;
     }
 
     update() {

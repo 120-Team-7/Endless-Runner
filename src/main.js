@@ -9,8 +9,12 @@ while maintaining class structure to support more complex behaviors such as the 
 through combing through Phaser documents.
 
 Aesthetic creative tilt:
-All art assets were created by Hoang and Henry. We chose to use vector art with contrasting solid colors in order to give the game a clean look and a modern feel that is more popular in current media. The color palette is made up of mostly cool colors, reinforcing this relaxing feel. To compliment this atmosphere, the background music was written by Hoang in an F major key at 80 beats per minute, adding a positive feel to the game as well as amplifying the relaxing mood. Lastly, the character animation is clean and fluid. These aesthetic choices compliment the sharp and naturalistic controls while also encouraging the player to remain calm during stressful gameplay.
-
+All art assets were created by Hoang and Henry. We chose to use vector art with contrasting solid colors in order to give
+the game a clean look and a modern feel that is more popular in current media. The color palette is made up of mostly cool
+colors, reinforcing this relaxing feel. To compliment this atmosphere, the background music was written by Hoang in an
+F major key at 80 beats per minute, adding a positive feel to the game as well as amplifying the relaxing mood. Lastly, the
+character animation is clean and fluid. These aesthetic choices compliment the sharp and naturalistic controls while also
+encouraging the player to remain calm during stressful gameplay.
 */
 
 var gravityY = 600;
@@ -43,7 +47,7 @@ let game = new Phaser.Game(config);
 var globalVolume = 1;
 var normalSoundRate = 1;
 var slowedSoundRate = normalSoundRate - 0.5*normalSoundRate;
-var soundRateDifficultBump = 0.5;
+var soundRateDifficultBump = 0.25;
 var soundRateChange = 0.0026;
 var volumeChange = 0.1;
 
@@ -80,13 +84,16 @@ var currTime = 0;               // Track this round's time
 var backgroundScroll = 2;
 var groundScroll = 5;
 var cloudScroll = 1;
+var logCount;
+
+// Difficulty settings
 var nextDifficultyLevel = 30000; // Time until next increase in difficulty
-var difficultyLevelMax = 1;     // Number of spawners spawned on max difficulty + 2
+var difficultyLevelMax = 2;     // Number of spawners spawned on max difficulty + 2
 var thisDifficultyLevel = 1;
-var spawnTime = 3000;
-var spawnTimeMax = 3000;
-var spawnTimeMin = 2000;
-var count = 1;
+var spawnTimeMax = 4000;
+var spawnTime = spawnTimeMax;
+var spawnTimeMin = 2500;
+var spawnTimeChange = 500;
 
 // Obstacle settings
 var logAngularVelocity = 540;
@@ -120,7 +127,7 @@ var isHit = false;
 // Player run movemment
 var maxVelocityX = 400;
 var maxVelocityY = 1000;
-var playerRunAccel = 100;
+var playerRunAccel = 40;
 var groundDrag = 600;
 
 // Player jump movemment
@@ -129,7 +136,7 @@ var playerJumpSpeed = -50;
 var playerInitSpeed = -500;
 var playerGravity = 1000;
 
-var playerAirAccel = 40;
+var playerAirAccel = 30;
 var airDrag = 100;
 
 // Player time slow

@@ -17,10 +17,10 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
                     // Spawns number of logs equal to difficulty in a burst
                     // Each log has random x and y velocity and spawn position
                     // Log(scene, group, spawnX, spawnY, velocityX, velocityY, logBounce)
-                    for(count = 0; count < thisDifficultyLevel; count++){
+                    for(logCount = 0; logCount < thisDifficultyLevel; logCount++){
                         if(!this.isFull()){
                             // Spawns consecutive logs at least a little far apart 
-                            let cascadeSpawn = gameWidth + 100 + count*Phaser.Math.Between(50, 300);
+                            let cascadeSpawn = gameWidth + 100 + logCount*Phaser.Math.Between(50, 300);
                             this.add(new Log(scene, this, cascadeSpawn, Phaser.Math.Between(100, centerY),
                         Phaser.Math.Between(minX, maxX), Phaser.Math.Between(minY, maxY), logBounce));
                         }
@@ -46,7 +46,6 @@ class ObstacleSpawner extends Phaser.GameObjects.Group{
             isGameOver = true;
             isHit = true;
             sceneClock.paused = true;
-            player.body.setDragX(groundDrag);
             // Play death sound
             this.sound.play('death');
             // Camera effects
