@@ -66,6 +66,8 @@ class Play extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+
+        //Create jumping animation
         this.anims.create({
             key: 'jump',
             frames: [
