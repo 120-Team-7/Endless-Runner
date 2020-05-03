@@ -67,7 +67,7 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key: 'walk2',
+            key: 'jump',
             frames: [
                 { key: 'player',frame:"jump1" },
                 { key: 'player',frame:"jump2" },
@@ -185,6 +185,7 @@ class Play extends Phaser.Scene {
         this.spawner1.update();
         // this.physics.world.collide(paddle, this.barrierGroup, this.paddleCollision, null, this);
         isGrounded = player.body.touching.down;
+        
 
         if(!isGameOver){
             if(isGrounded){
@@ -226,25 +227,12 @@ class Play extends Phaser.Scene {
             // Min jump speed
             if(isJumping == false && isGrounded && Phaser.Input.Keyboard.JustDown(keyJump)){
                 player.body.velocity.y += playerInitSpeed;
-                isJumping = true;
-                player.play('walk2');
-                
-                
+                isJumping = true;   
             }
-            if(Phaser.Input.Keyboard.JustDown(keyRight) && isGrounded && isJumping == false && keyRight.isDown) {
-                player.play('walk');
-            }
-
-            if(Phaser.Input.Keyboard.JustDown(keyLeft) && isGrounded && isJumping == false && keyLeft.isDown) {
-                player.play('walk');
-            }
-            
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {
                 player.body.velocity.y += playerJumpSpeed;
-                player.play('walk2');
-                
-                
+
             }
             // Let go of up key to jump again
             if(Phaser.Input.Keyboard.JustUp(keyJump)){
