@@ -12,7 +12,7 @@ class Load extends Phaser.Scene {
             align: 'center',
         }).setOrigin(0.5, 0.5);
         // Load image assets
-        this.load.atlas('player','./assets/runningchar.png','./assets/runningchar.json');
+        this.load.atlas('player','./assets/final.png','./assets/final.json');
         this.load.image('cloud', './assets/bigCloud.png');
         this.load.image('ground', './assets/ground.png');
         this.load.image('invisibleGround', './assets/invisibleGround.png');

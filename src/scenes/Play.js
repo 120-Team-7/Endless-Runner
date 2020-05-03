@@ -74,6 +74,20 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'jump',
+            frames: [
+                { key: 'player',frame:"jump1" },
+                { key: 'player',frame:"jump2" },
+                { key: 'player',frame:"jump3" },
+                { key: 'player',frame:"jump4" },
+                { key: 'player',frame:"jump5" },
+                { key: 'player',frame:"jump6" },
+            ],
+            frameRate: 24,
+            repeat: 0
+        });
+
         // Create player
         player = this.physics.add.sprite(300, 350, 'player','run2').play("walk");
         player.body.setSize(30, 105);
@@ -194,7 +208,6 @@ class Play extends Phaser.Scene {
 
         if(!isGameOver){
             if(isGrounded){
-                player.anims.resume();
                 // Ground movement
                 if(keyLeft.isDown) {
                     player.body.velocity.x -= playerRunAccel;
@@ -204,8 +217,8 @@ class Play extends Phaser.Scene {
                     // Set drag when not inputting movement 
                     player.body.setDragX(groundDrag);
                 }
+                player.play('walk', true);
             } else {
-                player.anims.pause();
                 // Air movement
                 // Set drag always when in air, decreased control while in air
                 player.body.setDragX(airDrag);
@@ -221,6 +234,7 @@ class Play extends Phaser.Scene {
                 player.body.velocity.y += playerInitSpeed;
                 isJumping = true;
                 gruntSound.play();
+                player.play('jump');
             }
             // Hold jump speed
             if(isJumping == true && Phaser.Input.Keyboard.DownDuration(keyJump, holdJumpTime)) {
